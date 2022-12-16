@@ -46,6 +46,9 @@ public class CharacterDetailActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         Bundle extras = intent.getExtras();
+
+        getSupportActionBar().setTitle(extras.getString("NAMA"));
+
         nama.setText(extras.getString("NAMA"));
         asal.setText(extras.getString("ASAL"));
         vision.setText(extras.getString("VISION"));
