@@ -81,13 +81,14 @@ public class LoginActivity extends AppCompatActivity {
                         finish();
                     } else {
                         Log.e(TAG, "onResponse: " + response.code());
-                        Log.e(TAG, "onResponse:  pesanError = " + response.body().getPesanError().getError());
+//                        Log.e(TAG, "onResponse:  pesanError = " + response.body().getPesanError().getError());
                         Toast.makeText(LoginActivity.this, "Error Code", Toast.LENGTH_SHORT).show();
                     }
+                }else{
+                    Log.e(TAG, "onResponse: " + response.code());
+//                Log.e(TAG, "onResponse:  pesanError = " + response.body().getPesanError().getError());
+                    Toast.makeText(LoginActivity.this, "Login unsuccessful!!!", Toast.LENGTH_SHORT).show();
                 }
-                Log.e(TAG, "onResponse: " + response.code());
-                Log.e(TAG, "onResponse:  pesanError = " + response.body().getPesanError().getError());
-                Toast.makeText(LoginActivity.this, "Login unsuccessful!!!", Toast.LENGTH_SHORT).show();
             }
 
             @Override

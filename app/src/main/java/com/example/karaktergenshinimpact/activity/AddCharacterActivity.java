@@ -23,10 +23,12 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.karaktergenshinimpact.R;
+import com.example.karaktergenshinimpact.Utils.ErrorUtils;
 import com.example.karaktergenshinimpact.Utils.RealPathUtil;
 import com.example.karaktergenshinimpact.model.CharacterModel;
 import com.example.karaktergenshinimpact.request.APIInterface;
 import com.example.karaktergenshinimpact.request.APIService;
+import com.example.karaktergenshinimpact.response.APIError;
 import com.example.karaktergenshinimpact.response.AddCharacterResponse;
 
 import java.io.File;
@@ -169,14 +171,51 @@ public class AddCharacterActivity extends AppCompatActivity {
         call.enqueue(new Callback<AddCharacterResponse>() {
             @Override
             public void onResponse(Call<AddCharacterResponse> call, Response<AddCharacterResponse> response) {
-                Log.e(TAG,"masuk onResponse");
                 if(response.isSuccessful()){
-                    if(response.body().getStatus()==200){
+                    Log.e(TAG,"masuk response successful");
+                    if(response.code()==200){
+                        Log.e(TAG,"masuk response code 200");
                         Toast.makeText(getApplicationContext(),"Character added!", Toast.LENGTH_SHORT).show();
+                        finish();
                     }
                     else{
-                        Toast.makeText(getApplicationContext(),"Character not added!", Toast.LENGTH_SHORT).show();
+                        Log.e(TAG,"masuk response selain 200: "+Integer.toString(response.code()));
+                        Toast.makeText(getApplicationContext(),"Your input is invalid or character already exist!!!", Toast.LENGTH_SHORT).show();
+//                        switch (response.code()) {
+//                            case 401:
+//                                Toast.makeText(AddCharacterActivity.this, "unauthorized", Toast.LENGTH_SHORT).show();
+//                                break;
+//                            case 404:
+//                                Toast.makeText(AddCharacterActivity.this, "not found", Toast.LENGTH_SHORT).show();
+//                                break;
+//                            case 500:
+//                                Toast.makeText(AddCharacterActivity.this, "server broken", Toast.LENGTH_SHORT).show();
+//                                break;
+//                            default:
+//                                Toast.makeText(AddCharacterActivity.this, "unknown error", Toast.LENGTH_SHORT).show();
+//                                break;
+//                        }
                     }
+                }else{
+                    Log.e(TAG,"masuk response unsucceful");
+                    Toast.makeText(getApplicationContext(),"Check your internet connection!!!", Toast.LENGTH_SHORT).show();
+//                    APIError apiError = ErrorUtils.parseError(response);
+//                    Log.e(TAG,apiError.getMessage());
+
+//                    switch (response.code()) {
+//                        case 401:
+//                            Toast.makeText(AddCharacterActivity.this, "unauthorized", Toast.LENGTH_SHORT).show();
+//                            break;
+//                        case 404:
+//                            Toast.makeText(AddCharacterActivity.this, "not found", Toast.LENGTH_SHORT).show();
+//                            break;
+//                        case 500:
+//                            Toast.makeText(AddCharacterActivity.this, "server broken", Toast.LENGTH_SHORT).show();
+//                            break;
+//                        default:
+//                            Toast.makeText(AddCharacterActivity.this, "unknown error", Toast.LENGTH_SHORT).show();
+//                            break;
+//                    }
                 }
             }
 
