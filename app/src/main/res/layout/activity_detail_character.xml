@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    tools:context=".activity.CharacterDetailActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_gravity="center"
+        android:gravity="center">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="5dp">
+
+            <TextView
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:text="Name :" />
+
+            <TextView
+                android:id="@+id/nama_character_detail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="character" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="5dp">
+
+            <TextView
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:text="Origin :" />
+
+            <TextView
+                android:id="@+id/asal_character_detail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="character" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="5dp">
+
+            <TextView
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:text="Vision :" />
+
+            <TextView
+                android:id="@+id/vision_character_detail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="character" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="5dp">
+
+            <TextView
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:text="Weapon :" />
+
+            <TextView
+                android:id="@+id/senjata_character_detail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="character" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="5dp">
+
+            <TextView
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:text="Rarity :" />
+
+            <TextView
+                android:id="@+id/rarity_character_detail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="character" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="5dp">
+
+            <TextView
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:text="Description :" />
+
+            <TextView
+                android:id="@+id/description_character_detail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="character" />
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/card_karakter"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="EDIT CHAR" />
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="DELETE" />
+        </LinearLayout>
+    </LinearLayout>
+</ScrollView>
