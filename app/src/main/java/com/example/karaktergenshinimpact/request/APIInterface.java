@@ -10,6 +10,7 @@ import java.util.List;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import retrofit2.Call;
+import retrofit2.http.DELETE;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
@@ -58,4 +59,9 @@ public interface APIInterface {
                                             @Part("rarity")RequestBody rarity,
                                             @Part("senjata")RequestBody senjata,
                                             @Part("deskripsi")RequestBody deskripsi);
+
+
+    @DELETE("delete/{id}")
+    Call<AddCharacterResponse> deleteCharacter(@Header("Authorization") String token,
+                                               @Path("id") String id);
 }

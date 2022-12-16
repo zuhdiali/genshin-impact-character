@@ -135,11 +135,13 @@
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:id="@+id/edit_char_detail"
                 android:text="EDIT CHAR" />
 
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:id="@+id/delete_char_detail"
                 android:text="DELETE" />
         </LinearLayout>
     </LinearLayout>

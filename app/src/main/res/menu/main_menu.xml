@@ -2,9 +2,11 @@
 <menu xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item android:title="Profil"
+    <item android:title="Refresh"
+        android:id="@+id/refresh"/>
+    <item android:title="Profile"
         android:id="@+id/profil"/>
-    <item android:title="Keluar"
+    <item android:title="Logout"
         android:id="@+id/logout" />
 
 </menu>

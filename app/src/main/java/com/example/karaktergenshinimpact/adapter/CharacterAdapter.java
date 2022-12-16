@@ -47,6 +47,7 @@ public class CharacterAdapter extends RecyclerView.Adapter<CharacterAdapter.Hold
 //                Toast.makeText(view.getContext(), "Karakter: " + listKarakter.get(position).getNama(), Toast.LENGTH_SHORT).show();
                 Intent i = new Intent(view.getContext(), CharacterDetailActivity.class);
                 Bundle extras = new Bundle();
+                extras.putString("ID", listKarakter.get(position).getId());
                 extras.putString("NAMA", listKarakter.get(position).getNama());
                 extras.putString("VISION", listKarakter.get(position).getVision());
                 extras.putString("ASAL", listKarakter.get(position).getAsal());

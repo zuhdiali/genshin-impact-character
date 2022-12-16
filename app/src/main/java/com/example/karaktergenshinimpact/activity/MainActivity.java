@@ -44,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        listKarakter = new ArrayList<>();
+
         recyclerView = findViewById(R.id.recycler_view_beranda);
         linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL,false);
         recyclerView.setLayoutManager(linearLayoutManager);
@@ -65,26 +65,31 @@ public class MainActivity extends AppCompatActivity {
             startActivity(i);
             finish();
         }else{
-            APIInterface apiInterface = APIService.getRetrofitInstance().create(APIInterface.class);
-            Call<List<CharacterResponse>> call = apiInterface.getAllKarakter(sharedPreferences.getString("TOKEN",""));
-            call.enqueue(new Callback<List<CharacterResponse>>() {
-                @Override
-                public void onResponse(Call<List<CharacterResponse>> call, Response<List<CharacterResponse>> response) {
-                    for(CharacterResponse characterResponse : response.body()){
-                        listKarakter.add(characterResponse);
-                        Log.e(TAG,"nama karakter: "+ characterResponse.getNama());
-                    }
-                    characterAdapter = new CharacterAdapter(MainActivity.this,listKarakter);
-                    recyclerView.setAdapter(characterAdapter);
-                }
-
-                @Override
-                public void onFailure(Call<List<CharacterResponse>> call, Throwable t) {
-
-                }
-            });
+            refreshCharacters();
         }
 
+    }
+
+    private void refreshCharacters(){
+        listKarakter = new ArrayList<>();
+        APIInterface apiInterface = APIService.getRetrofitInstance().create(APIInterface.class);
+        Call<List<CharacterResponse>> call = apiInterface.getAllKarakter(sharedPreferences.getString("TOKEN",""));
+        call.enqueue(new Callback<List<CharacterResponse>>() {
+            @Override
+            public void onResponse(Call<List<CharacterResponse>> call, Response<List<CharacterResponse>> response) {
+                for(CharacterResponse characterResponse : response.body()){
+                    listKarakter.add(characterResponse);
+                    Log.e(TAG,"nama karakter: "+ characterResponse.getNama());
+                }
+                characterAdapter = new CharacterAdapter(MainActivity.this,listKarakter);
+                recyclerView.setAdapter(characterAdapter);
+            }
+
+            @Override
+            public void onFailure(Call<List<CharacterResponse>> call, Throwable t) {
+
+            }
+        });
     }
 
     @Override
@@ -97,6 +102,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()){
+            case R.id.refresh:
+                refreshCharacters();
+                return true;
             case R.id.profil:
                 Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
                 startActivity(intent);
