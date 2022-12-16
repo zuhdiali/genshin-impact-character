@@ -15,13 +15,14 @@ import com.example.karaktergenshinimpact.R;
 import com.example.karaktergenshinimpact.response.LoginResponse;
 import com.example.karaktergenshinimpact.request.APIInterface;
 import com.example.karaktergenshinimpact.request.APIService;
+import com.google.android.material.textfield.TextInputEditText;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 public class LoginActivity extends AppCompatActivity {
-    private EditText email, password;
+    private TextInputEditText email, password;
     private Button loginButton, registerButton;
     private static final String TAG = "LoginActivity";
     private SharedPreferences.Editor editor;
