@@ -14,6 +14,8 @@ import com.example.karaktergenshinimpact.request.APIInterface;
 import com.example.karaktergenshinimpact.request.APIService;
 import com.example.karaktergenshinimpact.response.AccountResponse;
 
+import org.json.JSONObject;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -65,7 +67,7 @@ public class RegisterActivity extends AppCompatActivity {
                             Toast.makeText(RegisterActivity.this,"Response code != 200!!!",Toast.LENGTH_SHORT).show();
                         }
                     }else{
-                        Toast.makeText(RegisterActivity.this,"Register unsuccessful!!!",Toast.LENGTH_SHORT).show();
+                        errorMsg(response);
                     }
                 }
 
@@ -79,5 +81,50 @@ public class RegisterActivity extends AppCompatActivity {
 
     private boolean isValidate() {
         return true;
+    }
+
+    private void errorMsg(Response<AccountResponse> response){
+        String showError = "";
+        try {
+            JSONObject jsonObjectError = new JSONObject(response.errorBody().string());
+            JSONObject errorMessages = jsonObjectError.getJSONObject("messages");
+
+            if (!errorMessages.isNull("email")) {
+                showError += errorMessages.getString("email");
+            }
+            if (!errorMessages.isNull("nama_lengkap")) {
+                if(!showError.equals("")){
+                    showError += "\n";
+                }
+                showError += "Full Name Field is required";
+            }
+            if (!errorMessages.isNull("username")) {
+                if(!showError.equals("")){
+                    showError += "\n";
+                }
+                showError += errorMessages.getString("username");
+            }
+            if (!errorMessages.isNull("password")) {
+                if(!showError.equals("")){
+                    showError += "\n";
+                }
+                showError += errorMessages.getString("password");
+            }
+            if (!errorMessages.isNull("confpassword")) {
+                if(!showError.equals("")){
+                    showError += "\n";
+                }
+                showError += errorMessages.getString("confpassword");
+            }
+            if (!errorMessages.isNull("error")) {
+                if(!showError.equals("")){
+                    showError += "\n";
+                }
+                showError +=errorMessages.getString("error");
+            }
+            Toast.makeText(getApplicationContext(), showError, Toast.LENGTH_LONG).show();
+        } catch (Exception e) {
+            Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+        }
     }
 }

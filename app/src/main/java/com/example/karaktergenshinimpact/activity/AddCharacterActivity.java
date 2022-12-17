@@ -23,13 +23,13 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.karaktergenshinimpact.R;
-import com.example.karaktergenshinimpact.Utils.ErrorUtils;
 import com.example.karaktergenshinimpact.Utils.RealPathUtil;
 import com.example.karaktergenshinimpact.model.CharacterModel;
 import com.example.karaktergenshinimpact.request.APIInterface;
 import com.example.karaktergenshinimpact.request.APIService;
-import com.example.karaktergenshinimpact.response.APIError;
 import com.example.karaktergenshinimpact.response.AddCharacterResponse;
+
+import org.json.JSONObject;
 
 import java.io.File;
 
@@ -58,7 +58,7 @@ public class AddCharacterActivity extends AppCompatActivity {
         vision = findViewById(R.id.vision_character_add);
         weapon = findViewById(R.id.senjata_character_add);
         rarity = findViewById(R.id.rarity_character_add);
-        deskripsi = findViewById(R.id.rarity_character_add);
+        deskripsi = findViewById(R.id.description_character_add);
         cardImg = (ImageView) findViewById(R.id.card_img_add);
         avatarImg = (ImageView) findViewById(R.id.avatar_img_add);
         selectCardImg = (Button) findViewById(R.id.card_img_button);
@@ -104,16 +104,22 @@ public class AddCharacterActivity extends AppCompatActivity {
         addCharacterButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                addCharacter(new CharacterModel(
-                        nama.getText().toString(),
-                        asal.getText().toString(),
-                        vision.getText().toString(),
-                        weapon.getText().toString(),
-                        rarity.getText().toString(),
-                        deskripsi.getText().toString(),
-                        pathCardImg,
-                        pathAvatarImg
-                ));
+                try {
+                    addCharacter(new CharacterModel(
+                            nama.getText().toString(),
+                            asal.getText().toString(),
+                            vision.getText().toString(),
+                            weapon.getText().toString(),
+                            rarity.getText().toString(),
+                            deskripsi.getText().toString(),
+                            pathCardImg,
+                            pathAvatarImg
+                    ));
+                }
+                catch (Exception e){
+                    Toast.makeText(AddCharacterActivity.this,"Please select image correctly", Toast.LENGTH_SHORT).show();
+                }
+
             }
         });
     }
@@ -198,24 +204,7 @@ public class AddCharacterActivity extends AppCompatActivity {
                     }
                 }else{
                     Log.e(TAG,"masuk response unsucceful");
-                    Toast.makeText(getApplicationContext(),"Check your internet connection!!!", Toast.LENGTH_SHORT).show();
-//                    APIError apiError = ErrorUtils.parseError(response);
-//                    Log.e(TAG,apiError.getMessage());
-
-//                    switch (response.code()) {
-//                        case 401:
-//                            Toast.makeText(AddCharacterActivity.this, "unauthorized", Toast.LENGTH_SHORT).show();
-//                            break;
-//                        case 404:
-//                            Toast.makeText(AddCharacterActivity.this, "not found", Toast.LENGTH_SHORT).show();
-//                            break;
-//                        case 500:
-//                            Toast.makeText(AddCharacterActivity.this, "server broken", Toast.LENGTH_SHORT).show();
-//                            break;
-//                        default:
-//                            Toast.makeText(AddCharacterActivity.this, "unknown error", Toast.LENGTH_SHORT).show();
-//                            break;
-//                    }
+                    errorMsg(response);
                 }
             }
 
@@ -225,5 +214,74 @@ public class AddCharacterActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(),t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private void errorMsg(Response<AddCharacterResponse> response){
+        String showError = "";
+        try {
+            JSONObject jsonObjectError = new JSONObject(response.errorBody().string());
+            JSONObject errorMessages = jsonObjectError.getJSONObject("messages");
+
+            if (!errorMessages.isNull("nama")) {
+                showError += errorMessages.getString("nama");
+            }
+            if (!errorMessages.isNull("asal")) {
+                if(!showError.equals("")){
+                    showError += "\n";
+                }
+                showError += errorMessages.getString("asal");
+            }
+            if (!errorMessages.isNull("username")) {
+                if(!showError.equals("")){
+                    showError += "\n";
+                }
+                showError += errorMessages.getString("username");
+            }
+            if (!errorMessages.isNull("vision")) {
+                if(!showError.equals("")){
+                    showError += "\n";
+                }
+                showError += errorMessages.getString("vision");
+            }
+            if (!errorMessages.isNull("senjata")) {
+                if(!showError.equals("")){
+                    showError += "\n";
+                }
+                showError += errorMessages.getString("senjata");
+            }
+            if (!errorMessages.isNull("rarity")) {
+                if(!showError.equals("")){
+                    showError += "\n";
+                }
+                showError += errorMessages.getString("rarity");
+            }
+            if (!errorMessages.isNull("avatar_img")) {
+                if(!showError.equals("")){
+                    showError += "\n";
+                }
+                showError += errorMessages.getString("avatar_img");
+            }
+            if (!errorMessages.isNull("card_img")) {
+                if(!showError.equals("")){
+                    showError += "\n";
+                }
+                showError += errorMessages.getString("card_img");
+            }
+            if (!errorMessages.isNull("deskripsi")) {
+                if(!showError.equals("")){
+                    showError += "\n";
+                }
+                showError += errorMessages.getString("deskripsi");
+            }
+            if (!errorMessages.isNull("error")) {
+                if(!showError.equals("")){
+                    showError += "\n";
+                }
+                showError += errorMessages.getString("error");
+            }
+            Toast.makeText(getApplicationContext(), showError, Toast.LENGTH_LONG).show();
+        } catch (Exception e) {
+            Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+        }
     }
 }

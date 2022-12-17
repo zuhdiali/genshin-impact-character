@@ -14,6 +14,8 @@ import com.example.karaktergenshinimpact.request.APIInterface;
 import com.example.karaktergenshinimpact.request.APIService;
 import com.example.karaktergenshinimpact.response.AccountResponse;
 
+import org.json.JSONObject;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -67,7 +69,7 @@ public class EditProfileActivity extends AppCompatActivity {
                 @Override
                 public void onResponse(Call<AccountResponse> call, Response<AccountResponse> response) {
                     if (response.isSuccessful()) {
-                        if (response.code() == 200) {
+//                        if (response.code() == 200) {
                             Toast.makeText(EditProfileActivity.this, "Edit account success!!!", Toast.LENGTH_SHORT).show();
                             SharedPreferences.Editor editor = sharedPreferences.edit();
                             editor.putString("FULL_NAME", namaLengkap.getText().toString());
@@ -76,11 +78,11 @@ public class EditProfileActivity extends AppCompatActivity {
 //                            Intent i = new Intent(EditProfileActivity.this, ProfileActivity.class);
 //                            startActivity(i);
                             finish();
-                        } else {
-                            Toast.makeText(EditProfileActivity.this, "Response code != 200!!!", Toast.LENGTH_SHORT).show();
-                        }
+//                        } else {
+//                            Toast.makeText(EditProfileActivity.this, "Response code != 200!!!", Toast.LENGTH_SHORT).show();
+//                        }
                     } else {
-                        Toast.makeText(EditProfileActivity.this, "Edit unsuccessful!!!", Toast.LENGTH_SHORT).show();
+                        errorMsg(response);
                     }
                 }
 
@@ -102,6 +104,57 @@ public class EditProfileActivity extends AppCompatActivity {
         }
         else {
             return false;
+        }
+    }
+
+    private void errorMsg(Response<AccountResponse> response){
+        String showError = "";
+        try {
+            JSONObject jsonObjectError = new JSONObject(response.errorBody().string());
+            JSONObject errorMessages = jsonObjectError.getJSONObject("messages");
+
+            if (!errorMessages.isNull("email")) {
+                showError += errorMessages.getString("email");
+            }
+            if (!errorMessages.isNull("password_lama")) {
+                if(!showError.equals("")){
+                    showError += "\n";
+                }
+                showError += errorMessages.getString("password_lama");
+            }
+            if (!errorMessages.isNull("nama_lengkap")) {
+                if(!showError.equals("")){
+                    showError += "\n";
+                }
+                showError += errorMessages.getString("nama_lengkap");
+            }
+            if (!errorMessages.isNull("username")) {
+                if(!showError.equals("")){
+                    showError += "\n";
+                }
+                showError += errorMessages.getString("username");
+            }
+            if (!errorMessages.isNull("password_baru")) {
+                if(!showError.equals("")){
+                    showError += "\n";
+                }
+                showError += errorMessages.getString("password_baru");
+            }
+            if (!errorMessages.isNull("confpassword_baru")) {
+                if(!showError.equals("")){
+                    showError += "\n";
+                }
+                showError += errorMessages.getString("confpassword_baru");
+            }
+            if (!errorMessages.isNull("error")) {
+                if(!showError.equals("")){
+                    showError += "\n";
+                }
+                showError +=errorMessages.getString("error");
+            }
+            Toast.makeText(getApplicationContext(), showError, Toast.LENGTH_LONG).show();
+        } catch (Exception e) {
+            Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
         }
     }
 
