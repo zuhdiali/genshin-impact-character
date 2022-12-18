@@ -2,31 +2,36 @@ package com.example.karaktergenshinimpact.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.karaktergenshinimpact.R;
 import com.example.karaktergenshinimpact.Utils.DownloadImageTask;
-import com.example.karaktergenshinimpact.Utils.URL;
+import com.example.karaktergenshinimpact.Utils.AppURL;
 import com.example.karaktergenshinimpact.request.APIInterface;
 import com.example.karaktergenshinimpact.request.APIService;
 import com.example.karaktergenshinimpact.response.AddCharacterResponse;
+import com.google.android.material.button.MaterialButton;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.textfield.TextInputEditText;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 public class CharacterDetailActivity extends AppCompatActivity {
-    private TextView nama, asal, vision, weapon, rarity, deskripsi;
-    private ImageView cardImg;
-    private Button deleteBtn;
+    private TextView nama, asal, vision, weapon, rarity;
+    private TextInputEditText deskripsi;
+    private ImageView cardImg, avatarImg;
+    private MaterialButton deleteBtn, seeCard;
     private SharedPreferences sharedPreferences;
+    private Dialog dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,11 +47,14 @@ public class CharacterDetailActivity extends AppCompatActivity {
         rarity = findViewById(R.id.rarity_character_detail);
         deskripsi = findViewById(R.id.description_character_detail);
         cardImg = findViewById(R.id.card_karakter);
-        deleteBtn = (Button) findViewById(R.id.delete_char_detail);
+        avatarImg = findViewById(R.id.avatar_karakter);
+        deleteBtn = findViewById(R.id.delete_char_detail);
+        seeCard = findViewById(R.id.download_card);
+        dialog = new Dialog(this);
 
         Intent intent = getIntent();
         Bundle extras = intent.getExtras();
-
+        new DownloadImageTask(avatarImg).execute(AppURL.urlAvatarImg + extras.getString("AVATAR_IMG"));
         getSupportActionBar().setTitle(extras.getString("NAMA"));
 
         nama.setText(extras.getString("NAMA"));
@@ -56,7 +64,6 @@ public class CharacterDetailActivity extends AppCompatActivity {
         rarity.setText(extras.getString("RARITY"));
         deskripsi.setText(extras.getString("DESKRIPSI"));
 
-        new DownloadImageTask(cardImg).execute(URL.urlCardImg + extras.getString("CARD_IMG"));
 
         deleteBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -78,6 +85,25 @@ public class CharacterDetailActivity extends AppCompatActivity {
 
                     }
                 });
+            }
+        });
+
+        seeCard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FloatingActionButton closePopUp;
+                ImageView cardCharacter;
+                dialog.setContentView(R.layout.popup_card_character_card);
+                cardCharacter = dialog.findViewById(R.id.popup_card);
+                closePopUp = dialog.findViewById(R.id.close_popup);
+                closePopUp.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        dialog.dismiss();
+                    }
+                });
+                new DownloadImageTask(cardCharacter).execute(AppURL.urlCardImg + extras.getString("CARD_IMG"));
+                dialog.show();
             }
         });
     }

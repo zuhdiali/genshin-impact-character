@@ -22,6 +22,7 @@ import com.example.karaktergenshinimpact.adapter.CharacterAdapter;
 import com.example.karaktergenshinimpact.response.CharacterResponse;
 import com.example.karaktergenshinimpact.request.APIInterface;
 import com.example.karaktergenshinimpact.request.APIService;
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
@@ -36,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
     private SharedPreferences sharedPreferences;
     private RecyclerView recyclerView;
     private LinearLayoutManager linearLayoutManager;
-    private FloatingActionButton tambahKarakter;
+    private ExtendedFloatingActionButton tambahKarakter;
     private CharacterAdapter characterAdapter;
     private List<CharacterResponse> listKarakter;
     private TextView userInfoLogin;
@@ -119,6 +120,8 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(i);
                 finish();
                 return true;
+            case R.id.setting:
+                startActivity(new Intent(MainActivity.this,SettingActivity.class));
             default:
                 return super.onOptionsItemSelected(item);
         }

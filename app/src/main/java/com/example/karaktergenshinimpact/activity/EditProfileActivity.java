@@ -13,6 +13,7 @@ import com.example.karaktergenshinimpact.R;
 import com.example.karaktergenshinimpact.request.APIInterface;
 import com.example.karaktergenshinimpact.request.APIService;
 import com.example.karaktergenshinimpact.response.AccountResponse;
+import com.google.android.material.textfield.TextInputEditText;
 
 import org.json.JSONObject;
 
@@ -21,7 +22,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class EditProfileActivity extends AppCompatActivity {
-    private EditText email, namaLengkap, username, oldPassword, newPassword, confPassword;
+    private TextInputEditText email, namaLengkap, username, oldPassword, newPassword, confPassword;
     private Button editBtn;
     private SharedPreferences sharedPreferences;
 
@@ -71,6 +72,7 @@ public class EditProfileActivity extends AppCompatActivity {
                     if (response.isSuccessful()) {
 //                        if (response.code() == 200) {
                             Toast.makeText(EditProfileActivity.this, "Edit account success!!!", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(EditProfileActivity.this, "Back to home page to apply changes", Toast.LENGTH_SHORT).show();
                             SharedPreferences.Editor editor = sharedPreferences.edit();
                             editor.putString("FULL_NAME", namaLengkap.getText().toString());
                             editor.putString("USERNAME", username.getText().toString());
