@@ -1,7 +1,7 @@
 package com.example.karaktergenshinimpact.Utils;
 
 public class URL {
-    private static final String IP = "http://192.168.98.6/ppk/rest-api-server/public";
+    private static final String IP = "http://192.168.1.8/ppk/rest-api-server/public";
 //
 //    public static final String urlWebService = "https://222011642.student.stis.ac.id";
     public static final String urlWebService = IP+"/";

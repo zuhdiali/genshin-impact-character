@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -13,6 +14,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.karaktergenshinimpact.R;
@@ -37,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
     private FloatingActionButton tambahKarakter;
     private CharacterAdapter characterAdapter;
     private List<CharacterResponse> listKarakter;
+    private TextView userInfoLogin;
     private static final String TAG = "MainActivity";
 
     @Override
@@ -44,11 +47,11 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
         recyclerView = findViewById(R.id.recycler_view_beranda);
         linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL,false);
         recyclerView.setLayoutManager(linearLayoutManager);
         tambahKarakter = findViewById(R.id.add_char_btn);
+        userInfoLogin = findViewById(R.id.user_login);
 
         tambahKarakter.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -65,6 +68,7 @@ public class MainActivity extends AppCompatActivity {
             startActivity(i);
             finish();
         }else{
+            userInfoLogin.setText("Welcome, "+sharedPreferences.getString("FULL_NAME",""));
             refreshCharacters();
         }
 

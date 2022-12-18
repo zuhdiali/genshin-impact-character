@@ -17,6 +17,9 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -28,6 +31,7 @@ import com.example.karaktergenshinimpact.model.CharacterModel;
 import com.example.karaktergenshinimpact.request.APIInterface;
 import com.example.karaktergenshinimpact.request.APIService;
 import com.example.karaktergenshinimpact.response.AddCharacterResponse;
+import com.google.android.material.textfield.TextInputEditText;
 
 import org.json.JSONObject;
 
@@ -41,11 +45,13 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class AddCharacterActivity extends AppCompatActivity {
-    private EditText nama, asal, vision, weapon, rarity, deskripsi;
+    private AutoCompleteTextView asal, vision, weapon, rarity;
+    private TextInputEditText nama, deskripsi;
     private ImageView cardImg, avatarImg;
     private Button selectCardImg, selectAvatarImg, addCharacterButton;
-    private String pathCardImg, pathAvatarImg;
+    private String pathCardImg, pathAvatarImg, asalString, visionString, weaponString, rarityString;
     private SharedPreferences sharedPreferences;
+    private ArrayAdapter<String> adapterItems;
     private static final String TAG = "AddCharacterActivity";
 
     @Override
@@ -65,21 +71,23 @@ public class AddCharacterActivity extends AppCompatActivity {
         selectAvatarImg = (Button) findViewById(R.id.avatar_img_button);
         addCharacterButton = (Button) findViewById(R.id.add_char_btn_add);
 
-        sharedPreferences = getSharedPreferences("USER_LOGIN",MODE_PRIVATE);
+        getSupportActionBar().setTitle("Add Character");
+        initializeDropdownMenus();
+
+        sharedPreferences = getSharedPreferences("USER_LOGIN", MODE_PRIVATE);
 
         selectCardImg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (ContextCompat.checkSelfPermission(getApplicationContext(),
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED){
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
                     Intent intent = new Intent();
                     intent.setType("image/*");
                     intent.setAction(Intent.ACTION_GET_CONTENT);
-                    startActivityForResult(intent,10);
-                }
-                else{
+                    startActivityForResult(intent, 10);
+                } else {
                     ActivityCompat.requestPermissions(AddCharacterActivity.this,
-                            new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},1);
+                            new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
                 }
             }
         });
@@ -88,15 +96,14 @@ public class AddCharacterActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (ContextCompat.checkSelfPermission(getApplicationContext(),
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED){
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
                     Intent intent = new Intent();
                     intent.setType("image/*");
                     intent.setAction(Intent.ACTION_GET_CONTENT);
-                    startActivityForResult(intent,11);
-                }
-                else{
+                    startActivityForResult(intent, 11);
+                } else {
                     ActivityCompat.requestPermissions(AddCharacterActivity.this,
-                            new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},1);
+                            new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
                 }
             }
         });
@@ -105,21 +112,93 @@ public class AddCharacterActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 try {
-                    addCharacter(new CharacterModel(
-                            nama.getText().toString(),
-                            asal.getText().toString(),
-                            vision.getText().toString(),
-                            weapon.getText().toString(),
-                            rarity.getText().toString(),
-                            deskripsi.getText().toString(),
-                            pathCardImg,
-                            pathAvatarImg
-                    ));
-                }
-                catch (Exception e){
-                    Toast.makeText(AddCharacterActivity.this,"Please select image correctly", Toast.LENGTH_SHORT).show();
+                    if (isValid()) {
+                        addCharacter(new CharacterModel(
+                                nama.getText().toString(),
+                                asalString,
+                                visionString,
+                                weaponString,
+                                rarityString,
+                                deskripsi.getText().toString(),
+                                pathCardImg,
+                                pathAvatarImg
+                        ));
+                    } else {
+                        Toast.makeText(AddCharacterActivity.this, "There is an empty field in the form", Toast.LENGTH_SHORT).show();
+                    }
+                } catch (Exception e) {
+                    Log.e(TAG, "Origin isnull: " + (asalString == null ? "true" : "false"));
+                    Toast.makeText(AddCharacterActivity.this, "Please select image correctly", Toast.LENGTH_SHORT).show();
                 }
 
+            }
+        });
+    }
+
+    private boolean isValid() {
+        if (nama.getText().toString().equals("")) {
+            return false;
+        }
+        if (asalString == null) {
+            return false;
+        }
+        if (visionString == null) {
+            return false;
+        }
+        if (weaponString == null) {
+            return false;
+        }
+        if (rarityString == null) {
+            return false;
+        }
+        if (deskripsi.getText().toString().equals("")) {
+            return false;
+        }
+        return true;
+    }
+
+    private void initializeDropdownMenus() {
+        String[] items = {"Mondstadt", "Liyue", "Inazuma", "Sumeru", "Fontaine", "Natlan", "Snezhnaya"};
+        adapterItems = new ArrayAdapter<String>(this, R.layout.item_list, items);
+        asal.setAdapter(adapterItems);
+        asal.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                asalString = adapterView.getItemAtPosition(i).toString();
+                Log.e(TAG, "Origin:  " + adapterView.getItemAtPosition(i).toString());
+            }
+        });
+
+        items = new String[]{"Anemo", "Geo", "Electro", "Dendro", "Hydro", "Pyro", "Cryo"};
+        adapterItems = new ArrayAdapter<String>(this, R.layout.item_list, items);
+        vision.setAdapter(adapterItems);
+        vision.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                visionString = adapterView.getItemAtPosition(i).toString();
+                Log.e(TAG, "Vision:  " + adapterView.getItemAtPosition(i).toString());
+            }
+        });
+
+        items = new String[]{"Sword", "Bow", "Catalyst", "Claymore", "Polearm"};
+        adapterItems = new ArrayAdapter<String>(this, R.layout.item_list, items);
+        weapon.setAdapter(adapterItems);
+        weapon.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                weaponString = adapterView.getItemAtPosition(i).toString();
+                Log.e(TAG, "Weapon:  " + adapterView.getItemAtPosition(i).toString());
+            }
+        });
+
+        items = new String[]{"5 stars", "4 stars"};
+        adapterItems = new ArrayAdapter<String>(this, R.layout.item_list, items);
+        rarity.setAdapter(adapterItems);
+        rarity.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                rarityString = adapterView.getItemAtPosition(i).toString();
+                Log.e(TAG, "Rarity:  " + adapterView.getItemAtPosition(i).toString());
             }
         });
     }
@@ -134,7 +213,7 @@ public class AddCharacterActivity extends AppCompatActivity {
 
             Bitmap bitmap = BitmapFactory.decodeFile(pathCardImg);
             cardImg.setImageBitmap(bitmap);
-        } else if(requestCode == 11 && resultCode == Activity.RESULT_OK) {
+        } else if (requestCode == 11 && resultCode == Activity.RESULT_OK) {
             Uri uri = data.getData();
             Context context = AddCharacterActivity.this;
             pathAvatarImg = RealPathUtil.getRealPath(context, uri);
@@ -144,14 +223,14 @@ public class AddCharacterActivity extends AppCompatActivity {
         }
     }
 
-    public void addCharacter(CharacterModel characterModel){
+    public void addCharacter(CharacterModel characterModel) {
         File cardImgFile = new File(pathCardImg);
-        RequestBody cardFileRequest = RequestBody.create(MediaType.parse("multipart/form-data"),cardImgFile);
-        MultipartBody.Part cardFileBody = MultipartBody.Part.createFormData("card_img",cardImgFile.getName(),cardFileRequest);
+        RequestBody cardFileRequest = RequestBody.create(MediaType.parse("multipart/form-data"), cardImgFile);
+        MultipartBody.Part cardFileBody = MultipartBody.Part.createFormData("card_img", cardImgFile.getName(), cardFileRequest);
 
         File avatarImgFile = new File(pathAvatarImg);
-        RequestBody avatarFileRequest = RequestBody.create(MediaType.parse("multipart/form-data"),avatarImgFile);
-        MultipartBody.Part avatarFileBody = MultipartBody.Part.createFormData("avatar_img",avatarImgFile.getName(),avatarFileRequest);
+        RequestBody avatarFileRequest = RequestBody.create(MediaType.parse("multipart/form-data"), avatarImgFile);
+        MultipartBody.Part avatarFileBody = MultipartBody.Part.createFormData("avatar_img", avatarImgFile.getName(), avatarFileRequest);
 
         RequestBody namaBody = RequestBody.create(MediaType.parse("multipart/form-data"), characterModel.getNama());
         RequestBody asalBody = RequestBody.create(MediaType.parse("multipart/form-data"), characterModel.getAsal());
@@ -162,8 +241,8 @@ public class AddCharacterActivity extends AppCompatActivity {
 
         APIInterface apiInterface = APIService.getRetrofitInstance().create(APIInterface.class);
 
-        Call<AddCharacterResponse> call = apiInterface.addCharacter("Bearer "+
-                sharedPreferences.getString("TOKEN",""),
+        Call<AddCharacterResponse> call = apiInterface.addCharacter("Bearer " +
+                        sharedPreferences.getString("TOKEN", ""),
                 cardFileBody,
                 avatarFileBody,
                 namaBody,
@@ -177,16 +256,15 @@ public class AddCharacterActivity extends AppCompatActivity {
         call.enqueue(new Callback<AddCharacterResponse>() {
             @Override
             public void onResponse(Call<AddCharacterResponse> call, Response<AddCharacterResponse> response) {
-                if(response.isSuccessful()){
-                    Log.e(TAG,"masuk response successful");
-                    if(response.code()==200){
-                        Log.e(TAG,"masuk response code 200");
-                        Toast.makeText(getApplicationContext(),"Character added!", Toast.LENGTH_SHORT).show();
+                if (response.isSuccessful()) {
+                    Log.e(TAG, "masuk response successful");
+                    if (response.code() == 200) {
+                        Log.e(TAG, "masuk response code 200");
+                        Toast.makeText(getApplicationContext(), "Character added!", Toast.LENGTH_SHORT).show();
                         finish();
-                    }
-                    else{
-                        Log.e(TAG,"masuk response selain 200: "+Integer.toString(response.code()));
-                        Toast.makeText(getApplicationContext(),"Your input is invalid or character already exist!!!", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Log.e(TAG, "masuk response selain 200: " + Integer.toString(response.code()));
+                        Toast.makeText(getApplicationContext(), "Your input is invalid or character already exist!!!", Toast.LENGTH_SHORT).show();
 //                        switch (response.code()) {
 //                            case 401:
 //                                Toast.makeText(AddCharacterActivity.this, "unauthorized", Toast.LENGTH_SHORT).show();
@@ -202,21 +280,21 @@ public class AddCharacterActivity extends AppCompatActivity {
 //                                break;
 //                        }
                     }
-                }else{
-                    Log.e(TAG,"masuk response unsucceful");
+                } else {
+                    Log.e(TAG, "masuk response unsucceful");
                     errorMsg(response);
                 }
             }
 
             @Override
             public void onFailure(Call<AddCharacterResponse> call, Throwable t) {
-                Log.e(TAG,"masuk onFailure");
-                Toast.makeText(getApplicationContext(),t.getMessage(), Toast.LENGTH_SHORT).show();
+                Log.e(TAG, "masuk onFailure");
+                Toast.makeText(getApplicationContext(), t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
 
-    private void errorMsg(Response<AddCharacterResponse> response){
+    private void errorMsg(Response<AddCharacterResponse> response) {
         String showError = "";
         try {
             JSONObject jsonObjectError = new JSONObject(response.errorBody().string());
@@ -226,55 +304,55 @@ public class AddCharacterActivity extends AppCompatActivity {
                 showError += errorMessages.getString("nama");
             }
             if (!errorMessages.isNull("asal")) {
-                if(!showError.equals("")){
+                if (!showError.equals("")) {
                     showError += "\n";
                 }
                 showError += errorMessages.getString("asal");
             }
             if (!errorMessages.isNull("username")) {
-                if(!showError.equals("")){
+                if (!showError.equals("")) {
                     showError += "\n";
                 }
                 showError += errorMessages.getString("username");
             }
             if (!errorMessages.isNull("vision")) {
-                if(!showError.equals("")){
+                if (!showError.equals("")) {
                     showError += "\n";
                 }
                 showError += errorMessages.getString("vision");
             }
             if (!errorMessages.isNull("senjata")) {
-                if(!showError.equals("")){
+                if (!showError.equals("")) {
                     showError += "\n";
                 }
                 showError += errorMessages.getString("senjata");
             }
             if (!errorMessages.isNull("rarity")) {
-                if(!showError.equals("")){
+                if (!showError.equals("")) {
                     showError += "\n";
                 }
                 showError += errorMessages.getString("rarity");
             }
             if (!errorMessages.isNull("avatar_img")) {
-                if(!showError.equals("")){
+                if (!showError.equals("")) {
                     showError += "\n";
                 }
                 showError += errorMessages.getString("avatar_img");
             }
             if (!errorMessages.isNull("card_img")) {
-                if(!showError.equals("")){
+                if (!showError.equals("")) {
                     showError += "\n";
                 }
                 showError += errorMessages.getString("card_img");
             }
             if (!errorMessages.isNull("deskripsi")) {
-                if(!showError.equals("")){
+                if (!showError.equals("")) {
                     showError += "\n";
                 }
                 showError += errorMessages.getString("deskripsi");
             }
             if (!errorMessages.isNull("error")) {
-                if(!showError.equals("")){
+                if (!showError.equals("")) {
                     showError += "\n";
                 }
                 showError += errorMessages.getString("error");

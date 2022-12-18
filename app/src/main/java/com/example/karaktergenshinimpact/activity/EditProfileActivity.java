@@ -75,6 +75,7 @@ public class EditProfileActivity extends AppCompatActivity {
                             editor.putString("FULL_NAME", namaLengkap.getText().toString());
                             editor.putString("USERNAME", username.getText().toString());
                             editor.putString("EMAIL", email.getText().toString());
+                            editor.apply();
 //                            Intent i = new Intent(EditProfileActivity.this, ProfileActivity.class);
 //                            startActivity(i);
                             finish();

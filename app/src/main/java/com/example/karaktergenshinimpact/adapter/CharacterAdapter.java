@@ -41,6 +41,7 @@ public class CharacterAdapter extends RecyclerView.Adapter<CharacterAdapter.Hold
     public void onBindViewHolder(@NonNull HolderKarakter holder, @SuppressLint("RecyclerView") int position) {
         holder.namaKarakter.setText(listKarakter.get(position).getNama());
         new DownloadImageTask(holder.avatarKarakter).execute(URL.urlAvatarImg + listKarakter.get(position).getAvatarImg());
+        setBackgroundItem(holder,listKarakter.get(position).getVision());
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -60,6 +61,36 @@ public class CharacterAdapter extends RecyclerView.Adapter<CharacterAdapter.Hold
                 view.getContext().startActivity(i);
             }
         });
+    }
+
+    private void setBackgroundItem(HolderKarakter holder,String vision) {
+        switch (vision){
+            case "Anemo":
+                holder.itemView.setBackgroundResource(R.drawable.background_anemo);
+                break;
+            case "Pyro":
+                holder.itemView.setBackgroundResource(R.drawable.background_pyro);
+                break;
+            case "Dendro":
+                holder.itemView.setBackgroundResource(R.drawable.background_dendro);
+                break;
+            case "Cryo":
+                holder.itemView.setBackgroundResource(R.drawable.background_cryo);
+                break;
+            case "Geo":
+                holder.itemView.setBackgroundResource(R.drawable.background_geo);
+                break;
+            case "Hydro":
+                holder.itemView.setBackgroundResource(R.drawable.background_hydro);
+                break;
+            case "Electro":
+                holder.itemView.setBackgroundResource(R.drawable.background_electro);
+                break;
+            default:
+//                holder.itemView.setBackgroundResource(R.drawable.background_hydro);
+                break;
+        }
+
     }
 
     @Override
