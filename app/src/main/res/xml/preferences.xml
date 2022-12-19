@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-<PreferenceCategory
-    android:key="server_category"
-    android:title="SERVER">
-    <EditTextPreference
-        android:dialogTitle="Base URL Web Service"
-        android:dialogMessage="Enter the base URL of server (web service)"
-        android:key="url_web_service"
-        android:title="URL Server"
-        android:summary="http://192.168.1.8/ppk/rest-api-server/public"
-        android:hint="http://192.168.1.8/ppk/rest-api-server/public"/>
-
-</PreferenceCategory>
-</PreferenceScreen>
+<androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <PreferenceCategory
+        android:key="server_category"
+        android:title="SERVER">
+        <EditTextPreference
+            android:dialogMessage="Enter the base URL of server (web service)"
+            android:dialogTitle="Base URL Web Service"
+            android:hint="http://192.168.1.8/ppk/rest-api-server/public"
+            android:key="url_web_service"
+            android:summary="http://192.168.1.8/ppk/rest-api-server/public"
+            android:title="URL Server" />
+    </PreferenceCategory>
+</androidx.preference.PreferenceScreen>

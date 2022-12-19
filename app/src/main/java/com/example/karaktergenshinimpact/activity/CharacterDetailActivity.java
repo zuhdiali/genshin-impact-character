@@ -2,7 +2,9 @@ package com.example.karaktergenshinimpact.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -29,7 +31,7 @@ public class CharacterDetailActivity extends AppCompatActivity {
     private TextView nama, asal, vision, weapon, rarity;
     private TextInputEditText deskripsi;
     private ImageView cardImg, avatarImg;
-    private MaterialButton deleteBtn, seeCard;
+    private MaterialButton deleteBtn, seeCard, editBtn;
     private SharedPreferences sharedPreferences;
     private Dialog dialog;
 
@@ -49,12 +51,14 @@ public class CharacterDetailActivity extends AppCompatActivity {
         cardImg = findViewById(R.id.card_karakter);
         avatarImg = findViewById(R.id.avatar_karakter);
         deleteBtn = findViewById(R.id.delete_char_detail);
+        editBtn = findViewById(R.id.edit_char_detail);
         seeCard = findViewById(R.id.download_card);
         dialog = new Dialog(this);
 
         Intent intent = getIntent();
         Bundle extras = intent.getExtras();
         new DownloadImageTask(avatarImg).execute(AppURL.urlAvatarImg + extras.getString("AVATAR_IMG"));
+//        new DownloadImageTask(cardImg).execute(AppURL.urlCardImg+ extras.getString("CARD_IMG"));
         getSupportActionBar().setTitle(extras.getString("NAMA"));
 
         nama.setText(extras.getString("NAMA"));
@@ -63,30 +67,6 @@ public class CharacterDetailActivity extends AppCompatActivity {
         weapon.setText(extras.getString("SENJATA"));
         rarity.setText(extras.getString("RARITY"));
         deskripsi.setText(extras.getString("DESKRIPSI"));
-
-
-        deleteBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                APIInterface apiInterface = APIService.getRetrofitInstance().create(APIInterface.class);
-                Call<AddCharacterResponse> call = apiInterface.deleteCharacter(
-                        "Bearer " + sharedPreferences.getString("TOKEN", ""),
-                        extras.getString("ID")
-                );
-                call.enqueue(new Callback<AddCharacterResponse>() {
-                    @Override
-                    public void onResponse(Call<AddCharacterResponse> call, Response<AddCharacterResponse> response) {
-                        Toast.makeText(getApplicationContext(), "Character " + extras.getString("NAMA") + " deleted successfully!!!", Toast.LENGTH_SHORT).show();
-                        finish();
-                    }
-
-                    @Override
-                    public void onFailure(Call<AddCharacterResponse> call, Throwable t) {
-
-                    }
-                });
-            }
-        });
 
         seeCard.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -106,5 +86,53 @@ public class CharacterDetailActivity extends AppCompatActivity {
                 dialog.show();
             }
         });
+
+        editBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent1 = new Intent(CharacterDetailActivity.this, EditCharacterActivity.class);
+                intent1.putExtras(extras);
+                startActivity(intent1);
+            }
+        });
+
+        deleteBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AlertDialog.Builder confirmDelete = new AlertDialog.Builder(CharacterDetailActivity.this);
+                confirmDelete.setTitle("Delete Character");
+                confirmDelete.setMessage("Are you sure you want to delete " + extras.getString("NAMA") + "?")
+                        .setCancelable(false)
+                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                APIInterface apiInterface = APIService.getRetrofitInstance().create(APIInterface.class);
+                                Call<AddCharacterResponse> call = apiInterface.deleteCharacter(
+                                        "Bearer " + sharedPreferences.getString("TOKEN", ""),
+                                        extras.getString("ID")
+                                );
+                                call.enqueue(new Callback<AddCharacterResponse>() {
+                                    @Override
+                                    public void onResponse(Call<AddCharacterResponse> call, Response<AddCharacterResponse> response) {
+                                        Toast.makeText(getApplicationContext(), "Character " + extras.getString("NAMA") + " deleted successfully!!!", Toast.LENGTH_SHORT).show();
+                                        finish();
+                                    }
+
+                                    @Override
+                                    public void onFailure(Call<AddCharacterResponse> call, Throwable t) {
+
+                                    }
+                                });
+                            }
+                        })
+                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                dialogInterface.cancel();
+                            }
+                        }).show();
+            }
+        });
+
     }
 }

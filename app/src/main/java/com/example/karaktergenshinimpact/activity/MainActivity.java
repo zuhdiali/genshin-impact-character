@@ -6,6 +6,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -49,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         recyclerView = findViewById(R.id.recycler_view_beranda);
-        linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL,false);
+        linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(linearLayoutManager);
         tambahKarakter = findViewById(R.id.add_char_btn);
         userInfoLogin = findViewById(R.id.user_login);
@@ -62,31 +64,31 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        sharedPreferences = getSharedPreferences("USER_LOGIN",MODE_PRIVATE);
-        if(!sharedPreferences.contains("TOKEN")){
-            Log.e(TAG,"masuk sini boy");
-            Intent i = new Intent(this,LoginActivity.class);
+        sharedPreferences = getSharedPreferences("USER_LOGIN", MODE_PRIVATE);
+        if (!sharedPreferences.contains("TOKEN")) {
+            Log.e(TAG, "masuk sini boy");
+            Intent i = new Intent(this, LoginActivity.class);
             startActivity(i);
             finish();
-        }else{
-            userInfoLogin.setText("Welcome, "+sharedPreferences.getString("FULL_NAME",""));
+        } else {
+            userInfoLogin.setText("Welcome, " + sharedPreferences.getString("FULL_NAME", ""));
             refreshCharacters();
         }
 
     }
 
-    private void refreshCharacters(){
+    private void refreshCharacters() {
         listKarakter = new ArrayList<>();
         APIInterface apiInterface = APIService.getRetrofitInstance().create(APIInterface.class);
-        Call<List<CharacterResponse>> call = apiInterface.getAllKarakter(sharedPreferences.getString("TOKEN",""));
+        Call<List<CharacterResponse>> call = apiInterface.getAllKarakter(sharedPreferences.getString("TOKEN", ""));
         call.enqueue(new Callback<List<CharacterResponse>>() {
             @Override
             public void onResponse(Call<List<CharacterResponse>> call, Response<List<CharacterResponse>> response) {
-                for(CharacterResponse characterResponse : response.body()){
+                for (CharacterResponse characterResponse : response.body()) {
                     listKarakter.add(characterResponse);
-                    Log.e(TAG,"nama karakter: "+ characterResponse.getNama());
+                    Log.e(TAG, "nama karakter: " + characterResponse.getNama());
                 }
-                characterAdapter = new CharacterAdapter(MainActivity.this,listKarakter);
+                characterAdapter = new CharacterAdapter(MainActivity.this, listKarakter);
                 recyclerView.setAdapter(characterAdapter);
             }
 
@@ -106,7 +108,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.refresh:
                 refreshCharacters();
                 return true;
@@ -115,13 +117,28 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
                 return true;
             case R.id.logout:
-                sharedPreferences.edit().clear().commit();
-                Intent i = new Intent(MainActivity.this, LoginActivity.class);
-                startActivity(i);
-                finish();
+                AlertDialog.Builder logoutAction = new AlertDialog.Builder(MainActivity.this);
+                logoutAction.setTitle("Logout");
+                logoutAction.setMessage("Are you sure you want to logout?")
+                        .setCancelable(false)
+                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                sharedPreferences.edit().clear().commit();
+                                Intent intent1 = new Intent(MainActivity.this, LoginActivity.class);
+                                startActivity(intent1);
+                                finish();
+                            }
+                        })
+                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                dialogInterface.cancel();
+                            }
+                        }).show();
                 return true;
             case R.id.setting:
-                startActivity(new Intent(MainActivity.this,SettingActivity.class));
+                startActivity(new Intent(MainActivity.this, SettingActivity.class));
             default:
                 return super.onOptionsItemSelected(item);
         }

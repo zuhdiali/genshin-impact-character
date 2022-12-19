@@ -21,7 +21,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -44,37 +43,43 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class AddCharacterActivity extends AppCompatActivity {
+public class EditCharacterActivity extends AppCompatActivity {
     private AutoCompleteTextView asal, vision, weapon, rarity;
     private TextInputEditText nama, deskripsi;
     private ImageView cardImg, avatarImg;
-    private Button selectCardImg, selectAvatarImg, addCharacterButton;
+    private Button selectCardImg, selectAvatarImg, editCharacterButton;
     private String pathCardImg, pathAvatarImg, asalString, visionString, weaponString, rarityString;
     private SharedPreferences sharedPreferences;
     private ArrayAdapter<String> adapterItems;
+    private Bundle extras;
     private static final String TAG = "AddCharacterActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_character);
+        setContentView(R.layout.activity_edit_character);
 
-        nama = findViewById(R.id.nama_character_add);
-        asal = findViewById(R.id.asal_character_add);
-        vision = findViewById(R.id.vision_character_add);
-        weapon = findViewById(R.id.senjata_character_add);
-        rarity = findViewById(R.id.rarity_character_add);
-        deskripsi = findViewById(R.id.description_character_add);
-        cardImg = (ImageView) findViewById(R.id.card_img_add);
-        avatarImg = (ImageView) findViewById(R.id.avatar_img_add);
-        selectCardImg = (Button) findViewById(R.id.card_img_button);
-        selectAvatarImg = (Button) findViewById(R.id.avatar_img_button);
-        addCharacterButton = (Button) findViewById(R.id.add_char_btn_add);
+        nama = findViewById(R.id.nama_character_editchr);
+        asal = findViewById(R.id.asal_character_editchr);
+        vision = findViewById(R.id.vision_character_editchr);
+        weapon = findViewById(R.id.senjata_character_editchr);
+        rarity = findViewById(R.id.rarity_character_editchr);
+        deskripsi = findViewById(R.id.description_character_editchr);
+        cardImg = (ImageView) findViewById(R.id.card_img_editchr);
+        avatarImg = (ImageView) findViewById(R.id.avatar_img_editchr);
+        selectCardImg = (Button) findViewById(R.id.card_img_button_editchr);
+        selectAvatarImg = (Button) findViewById(R.id.avatar_img_button_editchr);
+        editCharacterButton = (Button) findViewById(R.id.edit_char_btn);
 
         getSupportActionBar().setTitle("Add Character");
-        initializeDropdownMenus();
 
         sharedPreferences = getSharedPreferences("USER_LOGIN", MODE_PRIVATE);
+        Intent intent = getIntent();
+        extras = intent.getExtras();
+
+        initializeDropdownMenus();
+        nama.setText(extras.getString("NAMA"));
+        deskripsi.setText(extras.getString("DESKRIPSI"));
 
         selectCardImg.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -86,7 +91,7 @@ public class AddCharacterActivity extends AppCompatActivity {
                     intent.setAction(Intent.ACTION_GET_CONTENT);
                     startActivityForResult(intent, 10);
                 } else {
-                    ActivityCompat.requestPermissions(AddCharacterActivity.this,
+                    ActivityCompat.requestPermissions(EditCharacterActivity.this,
                             new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
                 }
             }
@@ -102,18 +107,18 @@ public class AddCharacterActivity extends AppCompatActivity {
                     intent.setAction(Intent.ACTION_GET_CONTENT);
                     startActivityForResult(intent, 11);
                 } else {
-                    ActivityCompat.requestPermissions(AddCharacterActivity.this,
+                    ActivityCompat.requestPermissions(EditCharacterActivity.this,
                             new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
                 }
             }
         });
 
-        addCharacterButton.setOnClickListener(new View.OnClickListener() {
+        editCharacterButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 try {
                     if (isValid()) {
-                        addCharacter(new CharacterModel(
+                        editCharacter(new CharacterModel(
                                 nama.getText().toString(),
                                 asalString,
                                 visionString,
@@ -124,11 +129,11 @@ public class AddCharacterActivity extends AppCompatActivity {
                                 pathAvatarImg
                         ));
                     } else {
-                        Toast.makeText(AddCharacterActivity.this, "There is an empty field in the form", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(EditCharacterActivity.this, "There is an empty field in the form", Toast.LENGTH_SHORT).show();
                     }
                 } catch (Exception e) {
                     Log.e(TAG, "Origin isnull: " + (asalString == null ? "true" : "false"));
-                    Toast.makeText(AddCharacterActivity.this, "Please select image correctly", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(EditCharacterActivity.this, "Please select image correctly", Toast.LENGTH_SHORT).show();
                 }
 
             }
@@ -161,6 +166,7 @@ public class AddCharacterActivity extends AppCompatActivity {
         String[] items = {"Mondstadt", "Liyue", "Inazuma", "Sumeru", "Fontaine", "Natlan", "Snezhnaya"};
         adapterItems = new ArrayAdapter<String>(this, R.layout.item_list, items);
         asal.setAdapter(adapterItems);
+        asal.setText(extras.getString("ASAL"),false);
         asal.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -172,6 +178,7 @@ public class AddCharacterActivity extends AppCompatActivity {
         items = new String[]{"Anemo", "Geo", "Electro", "Dendro", "Hydro", "Pyro", "Cryo"};
         adapterItems = new ArrayAdapter<String>(this, R.layout.item_list, items);
         vision.setAdapter(adapterItems);
+        vision.setText(extras.getString("VISION"),false);
         vision.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -183,6 +190,7 @@ public class AddCharacterActivity extends AppCompatActivity {
         items = new String[]{"Sword", "Bow", "Catalyst", "Claymore", "Polearm"};
         adapterItems = new ArrayAdapter<String>(this, R.layout.item_list, items);
         weapon.setAdapter(adapterItems);
+        weapon.setText(extras.getString("SENJATA"),false);
         weapon.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -194,6 +202,7 @@ public class AddCharacterActivity extends AppCompatActivity {
         items = new String[]{"5 stars", "4 stars"};
         adapterItems = new ArrayAdapter<String>(this, R.layout.item_list, items);
         rarity.setAdapter(adapterItems);
+        rarity.setText(extras.getString("RARITY"),false);
         rarity.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -208,14 +217,14 @@ public class AddCharacterActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 10 && resultCode == Activity.RESULT_OK) {
             Uri uri = data.getData();
-            Context context = AddCharacterActivity.this;
+            Context context = EditCharacterActivity.this;
             pathCardImg = RealPathUtil.getRealPath(context, uri);
 
             Bitmap bitmap = BitmapFactory.decodeFile(pathCardImg);
             cardImg.setImageBitmap(bitmap);
         } else if (requestCode == 11 && resultCode == Activity.RESULT_OK) {
             Uri uri = data.getData();
-            Context context = AddCharacterActivity.this;
+            Context context = EditCharacterActivity.this;
             pathAvatarImg = RealPathUtil.getRealPath(context, uri);
 
             Bitmap bitmap = BitmapFactory.decodeFile(pathAvatarImg);
@@ -223,43 +232,88 @@ public class AddCharacterActivity extends AppCompatActivity {
         }
     }
 
-    public void addCharacter(CharacterModel characterModel) {
-        File cardImgFile = new File(pathCardImg);
-        RequestBody cardFileRequest = RequestBody.create(MediaType.parse("multipart/form-data"), cardImgFile);
-        MultipartBody.Part cardFileBody = MultipartBody.Part.createFormData("card_img", cardImgFile.getName(), cardFileRequest);
-
-        File avatarImgFile = new File(pathAvatarImg);
-        RequestBody avatarFileRequest = RequestBody.create(MediaType.parse("multipart/form-data"), avatarImgFile);
-        MultipartBody.Part avatarFileBody = MultipartBody.Part.createFormData("avatar_img", avatarImgFile.getName(), avatarFileRequest);
-
+    public void editCharacter(CharacterModel characterModel) {
         RequestBody namaBody = RequestBody.create(MediaType.parse("multipart/form-data"), characterModel.getNama());
         RequestBody asalBody = RequestBody.create(MediaType.parse("multipart/form-data"), characterModel.getAsal());
         RequestBody visionBody = RequestBody.create(MediaType.parse("multipart/form-data"), characterModel.getVision());
         RequestBody senjataBody = RequestBody.create(MediaType.parse("multipart/form-data"), characterModel.getSenjata());
         RequestBody rarityBody = RequestBody.create(MediaType.parse("multipart/form-data"), characterModel.getRarity());
         RequestBody deskripsiBody = RequestBody.create(MediaType.parse("multipart/form-data"), characterModel.getDeskripsi());
-
+        MultipartBody.Part cardFileBody;
+        MultipartBody.Part avatarFileBody;
+        Call<AddCharacterResponse> call;
         APIInterface apiInterface = APIService.getRetrofitInstance().create(APIInterface.class);
 
-        Call<AddCharacterResponse> call = apiInterface.addCharacter("Bearer " +
-                        sharedPreferences.getString("TOKEN", ""),
-                cardFileBody,
-                avatarFileBody,
-                namaBody,
-                asalBody,
-                visionBody,
-                rarityBody,
-                senjataBody,
-                deskripsiBody
-        );
-
+//        KONDISIONAL APAKAH CARD DAN AVATAR MAU DIUPDATE
+        if (pathCardImg != null) {  // jika card mau diupdate
+            File cardImgFile = new File(pathCardImg);
+            RequestBody cardFileRequest = RequestBody.create(MediaType.parse("multipart/form-data"), cardImgFile);
+            cardFileBody = MultipartBody.Part.createFormData("card_img", cardImgFile.getName(), cardFileRequest);
+            if (pathAvatarImg != null) {  // jika card dan avatar mau diupdate
+                File avatarImgFile = new File(pathAvatarImg);
+                RequestBody avatarFileRequest = RequestBody.create(MediaType.parse("multipart/form-data"), avatarImgFile);
+                avatarFileBody = MultipartBody.Part.createFormData("avatar_img", avatarImgFile.getName(), avatarFileRequest);
+                call = apiInterface.editCharacter11("Bearer " +
+                                sharedPreferences.getString("TOKEN", ""),
+                        extras.getString("ID"),
+                        cardFileBody,
+                        avatarFileBody,
+                        namaBody,
+                        asalBody,
+                        visionBody,
+                        rarityBody,
+                        senjataBody,
+                        deskripsiBody
+                );
+            } else { // jika hanya card yang mau diupdate
+                call = apiInterface.editCharacter10("Bearer " +
+                                sharedPreferences.getString("TOKEN", ""),
+                        extras.getString("ID"),
+                        cardFileBody,
+                        namaBody,
+                        asalBody,
+                        visionBody,
+                        rarityBody,
+                        senjataBody,
+                        deskripsiBody
+                );
+            }
+        } else {  // jika card tidak mau diupdate
+            if (pathAvatarImg != null) {  // jika avatar mau diupdate
+                File avatarImgFile = new File(pathAvatarImg);
+                RequestBody avatarFileRequest = RequestBody.create(MediaType.parse("multipart/form-data"), avatarImgFile);
+                avatarFileBody = MultipartBody.Part.createFormData("avatar_img", avatarImgFile.getName(), avatarFileRequest);
+                call = apiInterface.editCharacter01("Bearer " +
+                                sharedPreferences.getString("TOKEN", ""),
+                        extras.getString("ID"),
+                        avatarFileBody,
+                        namaBody,
+                        asalBody,
+                        visionBody,
+                        rarityBody,
+                        senjataBody,
+                        deskripsiBody
+                );
+            } else { // jika card dan avatar tidak mau diupdate
+                call = apiInterface.editCharacter00("Bearer " +
+                                sharedPreferences.getString("TOKEN", ""),
+                        extras.getString("ID"),
+                        namaBody,
+                        asalBody,
+                        visionBody,
+                        rarityBody,
+                        senjataBody,
+                        deskripsiBody
+                );
+            }
+        }
         call.enqueue(new Callback<AddCharacterResponse>() {
             @Override
             public void onResponse(Call<AddCharacterResponse> call, Response<AddCharacterResponse> response) {
                 if (response.isSuccessful()) {
                     Log.e(TAG, "masuk response successful");
                     Log.e(TAG, "masuk response code 200");
-                    Toast.makeText(getApplicationContext(), "Character added!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "Character edited!", Toast.LENGTH_SHORT).show();
                     finish();
                 } else {
                     Log.e(TAG, "masuk response unsucceful");

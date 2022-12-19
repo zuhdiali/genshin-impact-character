@@ -64,4 +64,52 @@ public interface APIInterface {
     @DELETE("delete/{id}")
     Call<AddCharacterResponse> deleteCharacter(@Header("Authorization") String token,
                                                @Path("id") String id);
+
+    @Multipart
+    @POST("update/{id}")
+    Call<AddCharacterResponse> editCharacter00(@Header("Authorization") String token,
+                                            @Path("id") String id,
+                                            @Part("nama")RequestBody nama,
+                                            @Part("asal")RequestBody asal,
+                                            @Part("vision")RequestBody vision,
+                                            @Part("rarity")RequestBody rarity,
+                                            @Part("senjata")RequestBody senjata,
+                                            @Part("deskripsi")RequestBody deskripsi);
+
+    @Multipart
+    @POST("update/{id}")
+    Call<AddCharacterResponse> editCharacter10(@Header("Authorization") String token,
+                                               @Path("id") String id,
+                                               @Part MultipartBody.Part cardImg,
+                                               @Part("nama")RequestBody nama,
+                                               @Part("asal")RequestBody asal,
+                                               @Part("vision")RequestBody vision,
+                                               @Part("rarity")RequestBody rarity,
+                                               @Part("senjata")RequestBody senjata,
+                                               @Part("deskripsi")RequestBody deskripsi);
+
+    @Multipart
+    @POST("update/{id}")
+    Call<AddCharacterResponse> editCharacter01(@Header("Authorization") String token,
+                                               @Path("id") String id,
+                                               @Part MultipartBody.Part avatarImg,
+                                               @Part("nama")RequestBody nama,
+                                               @Part("asal")RequestBody asal,
+                                               @Part("vision")RequestBody vision,
+                                               @Part("rarity")RequestBody rarity,
+                                               @Part("senjata")RequestBody senjata,
+                                               @Part("deskripsi")RequestBody deskripsi);
+
+    @Multipart
+    @POST("update/{id}")
+    Call<AddCharacterResponse> editCharacter11(@Header("Authorization") String token,
+                                               @Path("id") String id,
+                                               @Part MultipartBody.Part cardImg,
+                                               @Part MultipartBody.Part avatarImg,
+                                               @Part("nama")RequestBody nama,
+                                               @Part("asal")RequestBody asal,
+                                               @Part("vision")RequestBody vision,
+                                               @Part("rarity")RequestBody rarity,
+                                               @Part("senjata")RequestBody senjata,
+                                               @Part("deskripsi")RequestBody deskripsi);
 }

@@ -63,8 +63,8 @@
                                     android:id="@+id/nama_character_detail"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="Character's Name"
                                     android:layout_marginTop="8dp"
+                                    android:text="Character's Name"
                                     android:textAppearance="?attr/textAppearanceHeadline6" />
 
                                 <GridLayout
@@ -148,8 +148,7 @@
                             android:id="@+id/description_box_detail"
                             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            >
+                            android:layout_height="wrap_content">
 
                             <com.google.android.material.textfield.TextInputEditText
                                 android:id="@+id/description_character_detail"
@@ -157,7 +156,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginHorizontal="5dp"
                                 android:cursorVisible="false"
-                                android:focusable="false"/>
+                                android:focusable="false" />
 
                         </com.google.android.material.textfield.TextInputLayout>
 
@@ -168,6 +167,7 @@
                             android:orientation="horizontal">
 
                             <com.google.android.material.button.MaterialButton
+                                android:id="@+id/edit_char_detail"
                                 style="?attr/borderlessButtonStyle"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -185,12 +185,13 @@
                 </com.google.android.material.card.MaterialCardView>
                 <!--                    Di sini nanti nampilin card gambar-->
                 <com.google.android.material.button.MaterialButton
+                    android:id="@+id/download_card"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:textAllCaps="false"
-                    android:id="@+id/download_card"
-                    android:text="See Character Card"/>
+                    android:text="See Character Card"
+                    android:textAllCaps="false" />
+
                 <ImageView
                     android:id="@+id/card_karakter"
                     android:layout_width="wrap_content"
