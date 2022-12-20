@@ -80,27 +80,28 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private boolean isValidate() {
+        Boolean isValid = true;
         if(email.getText().toString().equals("")){
             email.setError("Email is empty");
-            return false;
+            isValid = false;
         }
         if(username.getText().toString().equals("")){
             username.setError("Username is empty");
-            return false;
+            isValid = false;
         }
         if(fullName.getText().toString().equals("")){
             fullName.setError("Full name is empty");
-            return false;
+            isValid = false;
         }
         if(password.length()<6){
             password.setError("Password must be at least 6 characters long");
-            return false;
+            isValid = false;
         }
         if(confPassword.length()<6){
-            password.setError("Confirm password must be at least 6 characters long");
-            return false;
+            confPassword.setError("Confirm password must be at least 6 characters long");
+            isValid = false;
         }
-        return true;
+        return isValid;
     }
 
     private void errorMsg(Response<AccountResponse> response){

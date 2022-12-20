@@ -93,6 +93,7 @@ public class CharacterDetailActivity extends AppCompatActivity {
                 Intent intent1 = new Intent(CharacterDetailActivity.this, EditCharacterActivity.class);
                 intent1.putExtras(extras);
                 startActivity(intent1);
+                finish();
             }
         });
 
@@ -133,6 +134,13 @@ public class CharacterDetailActivity extends AppCompatActivity {
                         }).show();
             }
         });
-
+        if(sharedPreferences.getString("ROLE","").equals("admin")){
+            editBtn.setVisibility(View.VISIBLE);
+            deleteBtn.setVisibility(View.VISIBLE);
+        }
+        else{
+            editBtn.setVisibility(View.GONE);
+            deleteBtn.setVisibility(View.GONE);
+        }
     }
 }

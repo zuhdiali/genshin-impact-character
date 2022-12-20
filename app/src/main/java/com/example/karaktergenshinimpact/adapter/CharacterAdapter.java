@@ -67,24 +67,31 @@ public class CharacterAdapter extends RecyclerView.Adapter<CharacterAdapter.Hold
         switch (vision){
             case "Anemo":
                 holder.itemView.setBackgroundResource(R.drawable.background_anemo);
+                holder.visionKarakter.setImageResource(R.drawable.anemo_vision);
                 break;
             case "Pyro":
                 holder.itemView.setBackgroundResource(R.drawable.background_pyro);
+                holder.visionKarakter.setImageResource(R.drawable.pyro_vision);
                 break;
             case "Dendro":
                 holder.itemView.setBackgroundResource(R.drawable.background_dendro);
+                holder.visionKarakter.setImageResource(R.drawable.dendro_vision);
                 break;
             case "Cryo":
                 holder.itemView.setBackgroundResource(R.drawable.background_cryo);
+                holder.visionKarakter.setImageResource(R.drawable.cryo_vision);
                 break;
             case "Geo":
                 holder.itemView.setBackgroundResource(R.drawable.background_geo);
+                holder.visionKarakter.setImageResource(R.drawable.geo_vision);
                 break;
             case "Hydro":
                 holder.itemView.setBackgroundResource(R.drawable.background_hydro);
+                holder.visionKarakter.setImageResource(R.drawable.hydro_vision);
                 break;
             case "Electro":
                 holder.itemView.setBackgroundResource(R.drawable.background_electro);
+                holder.visionKarakter.setImageResource(R.drawable.electro_vision);
                 break;
             default:
 //                holder.itemView.setBackgroundResource(R.drawable.background_hydro);
@@ -100,13 +107,15 @@ public class CharacterAdapter extends RecyclerView.Adapter<CharacterAdapter.Hold
 
     public class HolderKarakter extends RecyclerView.ViewHolder {
         TextView namaKarakter;
-        ImageView avatarKarakter;
+        ImageView avatarKarakter, visionKarakter;
 
         public HolderKarakter(@NonNull View itemView) {
             super(itemView);
 
             namaKarakter = itemView.findViewById(R.id.nama_karakter_rv);
             avatarKarakter = itemView.findViewById(R.id.avatar_rv);
+            visionKarakter = itemView.findViewById(R.id.vision_rv);
+
         }
     }
 }

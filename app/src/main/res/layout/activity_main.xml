@@ -52,6 +52,7 @@
             app:icon="@drawable/ic_add"
             android:text="Add Char"
             android:textAllCaps="false"
+            android:textColor="@color/design_default_color_on_secondary"
             />
     </RelativeLayout>
 

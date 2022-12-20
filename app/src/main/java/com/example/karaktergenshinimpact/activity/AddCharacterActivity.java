@@ -15,6 +15,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -133,28 +135,107 @@ public class AddCharacterActivity extends AppCompatActivity {
 
             }
         });
+
+        addTextChangeListenerDropdownMenus();
+    }
+
+    private void addTextChangeListenerDropdownMenus() {
+        asal.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                asal.setError(null);
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+
+        vision.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                vision.setError(null);
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+
+        weapon.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                weapon.setError(null);
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+
+        rarity.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                rarity.setError(null);
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
     }
 
     private boolean isValid() {
+        Boolean isValid = true;
         if (nama.getText().toString().equals("")) {
-            return false;
+            nama.setError("Name field is required");
+            isValid = false;
         }
         if (asalString == null) {
-            return false;
+            asal.setError("Origin field is required");
+            isValid = false;
         }
         if (visionString == null) {
-            return false;
+            vision.setError("Vision field is required");
+            isValid = false;
         }
         if (weaponString == null) {
-            return false;
+            weapon.setError("Weapon field is required");
+            isValid = false;
         }
         if (rarityString == null) {
-            return false;
+            rarity.setError("Rarity field is required");
+            isValid = false;
         }
         if (deskripsi.getText().toString().equals("")) {
-            return false;
+            deskripsi.setError("Description field is required");
+            isValid = false;
         }
-        return true;
+        return isValid;
     }
 
     private void initializeDropdownMenus() {

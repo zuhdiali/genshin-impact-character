@@ -66,18 +66,29 @@ public class MainActivity extends AppCompatActivity {
 
         sharedPreferences = getSharedPreferences("USER_LOGIN", MODE_PRIVATE);
         if (!sharedPreferences.contains("TOKEN")) {
+
             Log.e(TAG, "masuk sini boy");
             Intent i = new Intent(this, LoginActivity.class);
             startActivity(i);
             finish();
         } else {
-            userInfoLogin.setText("Welcome, " + sharedPreferences.getString("FULL_NAME", ""));
+            Log.e(TAG,"Bearer " +
+                    sharedPreferences.getString("TOKEN", ""));
+
             refreshCharacters();
+        }
+
+        if(sharedPreferences.getString("ROLE","").equals("admin")){
+            tambahKarakter.setVisibility(View.VISIBLE);
+        }
+        else{
+            tambahKarakter.setVisibility(View.GONE);
         }
 
     }
 
     private void refreshCharacters() {
+        userInfoLogin.setText("Welcome, " + sharedPreferences.getString("FULL_NAME", ""));
         listKarakter = new ArrayList<>();
         APIInterface apiInterface = APIService.getRetrofitInstance().create(APIInterface.class);
         Call<List<CharacterResponse>> call = apiInterface.getAllKarakter(sharedPreferences.getString("TOKEN", ""));
@@ -137,8 +148,6 @@ public class MainActivity extends AppCompatActivity {
                             }
                         }).show();
                 return true;
-            case R.id.setting:
-                startActivity(new Intent(MainActivity.this, SettingActivity.class));
             default:
                 return super.onOptionsItemSelected(item);
         }

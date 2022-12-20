@@ -13,4 +13,7 @@
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
     </style>
+    <style name="RECYCLER_VIEW_TEXT">
+        <item name="android:textColor">@color/black</item>
+    </style>
 </resources>

@@ -15,6 +15,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -71,7 +73,7 @@ public class EditCharacterActivity extends AppCompatActivity {
         selectAvatarImg = (Button) findViewById(R.id.avatar_img_button_editchr);
         editCharacterButton = (Button) findViewById(R.id.edit_char_btn);
 
-        getSupportActionBar().setTitle("Add Character");
+        getSupportActionBar().setTitle("Edit Character");
 
         sharedPreferences = getSharedPreferences("USER_LOGIN", MODE_PRIVATE);
         Intent intent = getIntent();
@@ -112,7 +114,10 @@ public class EditCharacterActivity extends AppCompatActivity {
                 }
             }
         });
-
+        asalString = extras.getString("ASAL");
+        visionString = extras.getString("VISION");
+        weaponString = extras.getString("SENJATA");
+        rarityString = extras.getString("RARITY");
         editCharacterButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -133,33 +138,113 @@ public class EditCharacterActivity extends AppCompatActivity {
                     }
                 } catch (Exception e) {
                     Log.e(TAG, "Origin isnull: " + (asalString == null ? "true" : "false"));
+                    Log.e(TAG, "Origin: " + e.getMessage());
                     Toast.makeText(EditCharacterActivity.this, "Please select image correctly", Toast.LENGTH_SHORT).show();
                 }
+
+            }
+        });
+
+        addTextChangeListenerDropdownMenus();
+    }
+
+    private void addTextChangeListenerDropdownMenus() {
+        asal.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                asal.setError(null);
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+
+        vision.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                vision.setError(null);
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+
+        weapon.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                weapon.setError(null);
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+
+        rarity.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                rarity.setError(null);
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
 
             }
         });
     }
 
     private boolean isValid() {
+        Boolean isValid = true;
         if (nama.getText().toString().equals("")) {
-            return false;
+            nama.setError("Name field is required");
+            isValid = false;
         }
         if (asalString == null) {
-            return false;
+            asal.setError("Origin field is required");
+            isValid = false;
         }
         if (visionString == null) {
-            return false;
+            vision.setError("Vision field is required");
+            isValid = false;
         }
         if (weaponString == null) {
-            return false;
+            weapon.setError("Weapon field is required");
+            isValid = false;
         }
         if (rarityString == null) {
-            return false;
+            rarity.setError("Rarity field is required");
+            isValid = false;
         }
         if (deskripsi.getText().toString().equals("")) {
-            return false;
+            deskripsi.setError("Description field is required");
+            isValid = false;
         }
-        return true;
+        return isValid;
     }
 
     private void initializeDropdownMenus() {
@@ -249,10 +334,12 @@ public class EditCharacterActivity extends AppCompatActivity {
             File cardImgFile = new File(pathCardImg);
             RequestBody cardFileRequest = RequestBody.create(MediaType.parse("multipart/form-data"), cardImgFile);
             cardFileBody = MultipartBody.Part.createFormData("card_img", cardImgFile.getName(), cardFileRequest);
+            Log.e(TAG,"Path Card Img: "+pathCardImg);
             if (pathAvatarImg != null) {  // jika card dan avatar mau diupdate
                 File avatarImgFile = new File(pathAvatarImg);
                 RequestBody avatarFileRequest = RequestBody.create(MediaType.parse("multipart/form-data"), avatarImgFile);
                 avatarFileBody = MultipartBody.Part.createFormData("avatar_img", avatarImgFile.getName(), avatarFileRequest);
+                Log.e(TAG,"Edit Char 11");
                 call = apiInterface.editCharacter11("Bearer " +
                                 sharedPreferences.getString("TOKEN", ""),
                         extras.getString("ID"),
@@ -265,7 +352,9 @@ public class EditCharacterActivity extends AppCompatActivity {
                         senjataBody,
                         deskripsiBody
                 );
+                Log.e(TAG,"Path Avatar Img: "+pathAvatarImg);
             } else { // jika hanya card yang mau diupdate
+                Log.e(TAG,"Edit Char 10");
                 call = apiInterface.editCharacter10("Bearer " +
                                 sharedPreferences.getString("TOKEN", ""),
                         extras.getString("ID"),
@@ -279,10 +368,12 @@ public class EditCharacterActivity extends AppCompatActivity {
                 );
             }
         } else {  // jika card tidak mau diupdate
+            Log.e(TAG,"Path Card Img: "+pathCardImg);
             if (pathAvatarImg != null) {  // jika avatar mau diupdate
                 File avatarImgFile = new File(pathAvatarImg);
                 RequestBody avatarFileRequest = RequestBody.create(MediaType.parse("multipart/form-data"), avatarImgFile);
                 avatarFileBody = MultipartBody.Part.createFormData("avatar_img", avatarImgFile.getName(), avatarFileRequest);
+                Log.e(TAG,"Edit Char 01");
                 call = apiInterface.editCharacter01("Bearer " +
                                 sharedPreferences.getString("TOKEN", ""),
                         extras.getString("ID"),
@@ -295,6 +386,7 @@ public class EditCharacterActivity extends AppCompatActivity {
                         deskripsiBody
                 );
             } else { // jika card dan avatar tidak mau diupdate
+                Log.e(TAG,"Edit Char 00");
                 call = apiInterface.editCharacter00("Bearer " +
                                 sharedPreferences.getString("TOKEN", ""),
                         extras.getString("ID"),
@@ -311,12 +403,11 @@ public class EditCharacterActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<AddCharacterResponse> call, Response<AddCharacterResponse> response) {
                 if (response.isSuccessful()) {
-                    Log.e(TAG, "masuk response successful");
-                    Log.e(TAG, "masuk response code 200");
                     Toast.makeText(getApplicationContext(), "Character edited!", Toast.LENGTH_SHORT).show();
                     finish();
                 } else {
                     Log.e(TAG, "masuk response unsucceful");
+                    Log.e(TAG,"Response gagal: "+response.code());
                     errorMsg(response);
                 }
             }
@@ -333,65 +424,71 @@ public class EditCharacterActivity extends AppCompatActivity {
         String showError = "";
         try {
             JSONObject jsonObjectError = new JSONObject(response.errorBody().string());
-            JSONObject errorMessages = jsonObjectError.getJSONObject("messages");
+            if(!jsonObjectError.isNull("message")){
+                showError += jsonObjectError.getString("message");
+            }
+            if(!jsonObjectError.isNull("messages")){
+                JSONObject errorMessages = jsonObjectError.getJSONObject("messages");
 
-            if (!errorMessages.isNull("nama")) {
-                showError += errorMessages.getString("nama");
-            }
-            if (!errorMessages.isNull("asal")) {
-                if (!showError.equals("")) {
-                    showError += "\n";
+                if (!errorMessages.isNull("nama")) {
+                    showError += errorMessages.getString("nama");
                 }
-                showError += errorMessages.getString("asal");
-            }
-            if (!errorMessages.isNull("username")) {
-                if (!showError.equals("")) {
-                    showError += "\n";
+                if (!errorMessages.isNull("asal")) {
+                    if (!showError.equals("")) {
+                        showError += "\n";
+                    }
+                    showError += errorMessages.getString("asal");
                 }
-                showError += errorMessages.getString("username");
-            }
-            if (!errorMessages.isNull("vision")) {
-                if (!showError.equals("")) {
-                    showError += "\n";
+                if (!errorMessages.isNull("username")) {
+                    if (!showError.equals("")) {
+                        showError += "\n";
+                    }
+                    showError += errorMessages.getString("username");
                 }
-                showError += errorMessages.getString("vision");
-            }
-            if (!errorMessages.isNull("senjata")) {
-                if (!showError.equals("")) {
-                    showError += "\n";
+                if (!errorMessages.isNull("vision")) {
+                    if (!showError.equals("")) {
+                        showError += "\n";
+                    }
+                    showError += errorMessages.getString("vision");
                 }
-                showError += errorMessages.getString("senjata");
-            }
-            if (!errorMessages.isNull("rarity")) {
-                if (!showError.equals("")) {
-                    showError += "\n";
+                if (!errorMessages.isNull("senjata")) {
+                    if (!showError.equals("")) {
+                        showError += "\n";
+                    }
+                    showError += errorMessages.getString("senjata");
                 }
-                showError += errorMessages.getString("rarity");
-            }
-            if (!errorMessages.isNull("avatar_img")) {
-                if (!showError.equals("")) {
-                    showError += "\n";
+                if (!errorMessages.isNull("rarity")) {
+                    if (!showError.equals("")) {
+                        showError += "\n";
+                    }
+                    showError += errorMessages.getString("rarity");
                 }
-                showError += errorMessages.getString("avatar_img");
-            }
-            if (!errorMessages.isNull("card_img")) {
-                if (!showError.equals("")) {
-                    showError += "\n";
+                if (!errorMessages.isNull("avatar_img")) {
+                    if (!showError.equals("")) {
+                        showError += "\n";
+                    }
+                    showError += errorMessages.getString("avatar_img");
                 }
-                showError += errorMessages.getString("card_img");
-            }
-            if (!errorMessages.isNull("deskripsi")) {
-                if (!showError.equals("")) {
-                    showError += "\n";
+                if (!errorMessages.isNull("card_img")) {
+                    if (!showError.equals("")) {
+                        showError += "\n";
+                    }
+                    showError += errorMessages.getString("card_img");
                 }
-                showError += errorMessages.getString("deskripsi");
-            }
-            if (!errorMessages.isNull("error")) {
-                if (!showError.equals("")) {
-                    showError += "\n";
+                if (!errorMessages.isNull("deskripsi")) {
+                    if (!showError.equals("")) {
+                        showError += "\n";
+                    }
+                    showError += errorMessages.getString("deskripsi");
                 }
-                showError += errorMessages.getString("error");
+                if (!errorMessages.isNull("error")) {
+                    if (!showError.equals("")) {
+                        showError += "\n";
+                    }
+                    showError += errorMessages.getString("error");
+                }
             }
+
             Toast.makeText(getApplicationContext(), showError, Toast.LENGTH_LONG).show();
         } catch (Exception e) {
             Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();

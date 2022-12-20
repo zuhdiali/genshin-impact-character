@@ -37,6 +37,7 @@ public class ProfileActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent i = new Intent(ProfileActivity.this, EditProfileActivity.class);
                 startActivity(i);
+                finish();
             }
         });
     }
