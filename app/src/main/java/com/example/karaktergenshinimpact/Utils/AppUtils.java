@@ -1,15 +1,14 @@
 package com.example.karaktergenshinimpact.Utils;
 
-public class AppURL {
-    private static final String IP = "http://192.168.1.7/ppk/rest-api-server/public";
-//
+public class AppUtils {
+    private static final String IP = "http://192.168.1.5/ppk/rest-api-server/public";
+    //
 //    public static final String urlWebService = "https://222011642.student.stis.ac.id";
-    public static final String urlWebService = IP+"/";
-//
+    public static final String urlWebService = IP + "/";
+    //
 //    public static final String urlAvatarImg = "https://222011642.student.stis.ac.id/img/avatar/";
-    public static final String urlAvatarImg = IP+"/img/avatar/";
-//
+    public static final String urlAvatarImg = IP + "/img/avatar/";
+    //
 //    public static final String urlCardImg = "https://222011642.student.stis.ac.id/img/card/";
-    public static final String urlCardImg = IP+"/img/card/";
-
+    public static final String urlCardImg = IP + "/img/card/";
 }

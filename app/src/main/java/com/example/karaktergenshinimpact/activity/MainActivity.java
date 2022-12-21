@@ -67,24 +67,19 @@ public class MainActivity extends AppCompatActivity {
         sharedPreferences = getSharedPreferences("USER_LOGIN", MODE_PRIVATE);
         if (!sharedPreferences.contains("TOKEN")) {
 
-            Log.e(TAG, "masuk sini boy");
             Intent i = new Intent(this, LoginActivity.class);
             startActivity(i);
             finish();
         } else {
-            Log.e(TAG,"Bearer " +
-                    sharedPreferences.getString("TOKEN", ""));
-
+            Log.e(TAG,"Bearer " + sharedPreferences.getString("TOKEN", ""));
             refreshCharacters();
         }
-
         if(sharedPreferences.getString("ROLE","").equals("admin")){
             tambahKarakter.setVisibility(View.VISIBLE);
         }
         else{
             tambahKarakter.setVisibility(View.GONE);
         }
-
     }
 
     private void refreshCharacters() {
@@ -97,7 +92,6 @@ public class MainActivity extends AppCompatActivity {
             public void onResponse(Call<List<CharacterResponse>> call, Response<List<CharacterResponse>> response) {
                 for (CharacterResponse characterResponse : response.body()) {
                     listKarakter.add(characterResponse);
-                    Log.e(TAG, "nama karakter: " + characterResponse.getNama());
                 }
                 characterAdapter = new CharacterAdapter(MainActivity.this, listKarakter);
                 recyclerView.setAdapter(characterAdapter);
@@ -105,7 +99,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<List<CharacterResponse>> call, Throwable t) {
-
+                Toast.makeText(MainActivity.this,"Server Error / No Internet Connection",Toast.LENGTH_SHORT).show();
             }
         });
     }

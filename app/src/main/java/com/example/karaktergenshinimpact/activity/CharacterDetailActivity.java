@@ -14,8 +14,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.karaktergenshinimpact.R;
+import com.example.karaktergenshinimpact.Utils.AppUtils;
 import com.example.karaktergenshinimpact.Utils.DownloadImageTask;
-import com.example.karaktergenshinimpact.Utils.AppURL;
 import com.example.karaktergenshinimpact.request.APIInterface;
 import com.example.karaktergenshinimpact.request.APIService;
 import com.example.karaktergenshinimpact.response.AddCharacterResponse;
@@ -57,8 +57,8 @@ public class CharacterDetailActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         Bundle extras = intent.getExtras();
-        new DownloadImageTask(avatarImg).execute(AppURL.urlAvatarImg + extras.getString("AVATAR_IMG"));
-//        new DownloadImageTask(cardImg).execute(AppURL.urlCardImg+ extras.getString("CARD_IMG"));
+        new DownloadImageTask(avatarImg).execute(AppUtils.urlAvatarImg + extras.getString("AVATAR_IMG"));
+//        new DownloadImageTask(cardImg).execute(AppUtils.urlCardImg+ extras.getString("CARD_IMG"));
         getSupportActionBar().setTitle(extras.getString("NAMA"));
 
         nama.setText(extras.getString("NAMA"));
@@ -82,7 +82,7 @@ public class CharacterDetailActivity extends AppCompatActivity {
                         dialog.dismiss();
                     }
                 });
-                new DownloadImageTask(cardCharacter).execute(AppURL.urlCardImg + extras.getString("CARD_IMG"));
+                new DownloadImageTask(cardCharacter).execute(AppUtils.urlCardImg + extras.getString("CARD_IMG"));
                 dialog.show();
             }
         });

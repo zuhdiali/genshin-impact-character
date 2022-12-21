@@ -14,8 +14,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.karaktergenshinimpact.R;
+import com.example.karaktergenshinimpact.Utils.AppUtils;
 import com.example.karaktergenshinimpact.Utils.DownloadImageTask;
-import com.example.karaktergenshinimpact.Utils.AppURL;
 import com.example.karaktergenshinimpact.activity.CharacterDetailActivity;
 import com.example.karaktergenshinimpact.response.CharacterResponse;
 
@@ -40,7 +40,7 @@ public class CharacterAdapter extends RecyclerView.Adapter<CharacterAdapter.Hold
     @Override
     public void onBindViewHolder(@NonNull HolderKarakter holder, @SuppressLint("RecyclerView") int position) {
         holder.namaKarakter.setText(listKarakter.get(position).getNama());
-        new DownloadImageTask(holder.avatarKarakter).execute(AppURL.urlAvatarImg + listKarakter.get(position).getAvatarImg());
+        new DownloadImageTask(holder.avatarKarakter).execute(AppUtils.urlAvatarImg + listKarakter.get(position).getAvatarImg());
         setBackgroundItem(holder,listKarakter.get(position).getVision());
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override

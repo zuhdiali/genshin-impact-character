@@ -32,7 +32,6 @@ public class LoginActivity extends AppCompatActivity {
     private Button loginButton, registerButton;
     private static final String TAG = "LoginActivity";
     private SharedPreferences.Editor editor;
-    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,9 +70,7 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
-//                showDialog();
                 if (response.isSuccessful()) {
-//                    hideDialog();
                     if (response.code() == 200) {
                         Log.e(TAG, "onResponse: " + response.code());
                         Log.e(TAG, "onResponse:  id = " + response.body().getIdUser());
@@ -96,7 +93,6 @@ public class LoginActivity extends AppCompatActivity {
                         Toast.makeText(LoginActivity.this, "Error Code", Toast.LENGTH_SHORT).show();
                     }
                 } else {
-//                    hideDialog();
                     Log.e(TAG, "onResponse: " + response.code());
 
                     try {
@@ -133,24 +129,9 @@ public class LoginActivity extends AppCompatActivity {
             public void onFailure(Call<LoginResponse> call, Throwable t) {
                 Log.e(TAG, "masuk sini juga");
                 Log.e(TAG, "onFailure: " + t.getMessage());
-                Toast.makeText(LoginActivity.this, "Internal Server Error", Toast.LENGTH_SHORT).show();
+                Toast.makeText(LoginActivity.this, "No Internet Connection / Server Error", Toast.LENGTH_SHORT).show();
             }
         });
     }
-
-    // show progress dialog
-    private void showDialog() {
-        if (!progressDialog.isShowing()) {
-            progressDialog.show();
-        }
-    }
-
-    // hide progress dialog
-    private void hideDialog() {
-        if (progressDialog.isShowing()) {
-            progressDialog.dismiss();
-        }
-    }
-
 
 }

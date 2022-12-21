@@ -1,9 +1,6 @@
 package com.example.karaktergenshinimpact.request;
 
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
-
-import com.example.karaktergenshinimpact.Utils.AppURL;
+import com.example.karaktergenshinimpact.Utils.AppUtils;
 
 import java.util.concurrent.TimeUnit;
 
@@ -23,7 +20,7 @@ public class APIService {
                     .writeTimeout(15, TimeUnit.SECONDS)
                     .build();
             retrofit = new Retrofit.Builder()
-                    .baseUrl(AppURL.urlWebService)
+                    .baseUrl(AppUtils.urlWebService)
                     .client(okHttpClient)
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
