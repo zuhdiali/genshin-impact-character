@@ -1,3 +1,11 @@
+/*
+ * *
+ *  * Created by zuhdi on 12/22/22, 8:35 AM
+ *  * Copyright (c) 2022 . All rights reserved.
+ *  * Last modified 12/15/22, 2:45 PM
+ *
+ */
+
 package com.example.karaktergenshinimpact.Utils;
 
 import android.annotation.SuppressLint;

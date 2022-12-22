@@ -1,3 +1,11 @@
+/*
+ * *
+ *  * Created by zuhdi on 12/22/22, 8:35 AM
+ *  * Copyright (c) 2022 . All rights reserved.
+ *  * Last modified 12/16/22, 8:42 AM
+ *
+ */
+
 package com.example.karaktergenshinimpact.model;
 
 public class UserModel {

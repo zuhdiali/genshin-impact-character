@@ -1,3 +1,11 @@
+/*
+ * *
+ *  * Created by zuhdi on 12/22/22, 8:35 AM
+ *  * Copyright (c) 2022 . All rights reserved.
+ *  * Last modified 12/21/22, 11:23 PM
+ *
+ */
+
 package com.example.karaktergenshinimpact.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -64,74 +72,81 @@ public class LoginActivity extends AppCompatActivity {
         Log.e(TAG, "email: " + emailString);
         Log.e(TAG, "password: " + passwordString);
 
-        APIInterface apiInterface = APIService.getRetrofitInstance().create(APIInterface.class);
-        Call<LoginResponse> call = apiInterface.getUserInformation(emailString, passwordString);
-        call.enqueue(new Callback<LoginResponse>() {
+        if(isValidate()){
+            APIInterface apiInterface = APIService.getRetrofitInstance().create(APIInterface.class);
+            Call<LoginResponse> call = apiInterface.getUserInformation(emailString, passwordString);
+            call.enqueue(new Callback<LoginResponse>() {
 
-            @Override
-            public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
-                if (response.isSuccessful()) {
-                    if (response.code() == 200) {
-                        Log.e(TAG, "onResponse: " + response.code());
-                        Log.e(TAG, "onResponse:  id = " + response.body().getIdUser());
-                        Log.e(TAG, "onResponse:  token = " + response.body().getToken());
-                        Log.e(TAG, "onResponse:  nama lengkap = " + response.body().getNamaLengkap());
-                        editor.putString("TOKEN", response.body().getToken());
-                        editor.putString("FULL_NAME", response.body().getNamaLengkap());
-                        editor.putString("ROLE", response.body().getRole());
-                        editor.putString("USERNAME", response.body().getUsername());
-                        editor.putString("EMAIL", response.body().getEmail());
-                        editor.putString("ID_USER", response.body().getIdUser());
-                        editor.putString("PASSWORD", passwordString);
-                        editor.apply();
-                        Intent i = new Intent(LoginActivity.this, MainActivity.class);
-                        startActivity(i);
-                        finish();
+                @Override
+                public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
+                    if (response.isSuccessful()) {
+                        if (response.code() == 200) {
+                            editor.putString("TOKEN", response.body().getToken());
+                            editor.putString("FULL_NAME", response.body().getNamaLengkap());
+                            editor.putString("ROLE", response.body().getRole());
+                            editor.putString("USERNAME", response.body().getUsername());
+                            editor.putString("EMAIL", response.body().getEmail());
+                            editor.putString("ID_USER", response.body().getIdUser());
+                            editor.apply();
+                            Intent i = new Intent(LoginActivity.this, MainActivity.class);
+                            startActivity(i);
+                            finish();
+                        } else {
+                            Log.e(TAG, "onResponse: " + response.code());
+                            Toast.makeText(LoginActivity.this, "Error Code", Toast.LENGTH_SHORT).show();
+                        }
                     } else {
                         Log.e(TAG, "onResponse: " + response.code());
-//                        Log.e(TAG, "onResponse:  pesanError = " + response.body().getPesanError().getError());
-                        Toast.makeText(LoginActivity.this, "Error Code", Toast.LENGTH_SHORT).show();
-                    }
-                } else {
-                    Log.e(TAG, "onResponse: " + response.code());
 
-                    try {
-                        JSONObject jsonObjectError = new JSONObject(response.errorBody().string());
-                        JSONObject errorMessages = jsonObjectError.getJSONObject("messages");
-                        String showError = "";
-                        if (!errorMessages.isNull("email")) {
-                            showError += errorMessages.getString("email");
-                        }
-                        if (!errorMessages.isNull("password")) {
-                            if(!showError.equals("")){
-                                showError += "\n";
+                        try {
+                            JSONObject jsonObjectError = new JSONObject(response.errorBody().string());
+                            JSONObject errorMessages = jsonObjectError.getJSONObject("messages");
+                            String showError = "";
+                            if (!errorMessages.isNull("email")) {
+                                showError += errorMessages.getString("email");
                             }
-                            showError += errorMessages.getString("password");
-                        }
-                        if (!errorMessages.isNull("error")) {
-                            if(!showError.equals("")){
-                                showError += "\n";
+                            if (!errorMessages.isNull("password")) {
+                                if(!showError.equals("")){
+                                    showError += "\n";
+                                }
+                                showError += errorMessages.getString("password");
                             }
-                            showError +=errorMessages.getString("error");
+                            if (!errorMessages.isNull("error")) {
+                                if(!showError.equals("")){
+                                    showError += "\n";
+                                }
+                                showError +=errorMessages.getString("error");
+                            }
+//                            Toast.makeText(getApplicationContext(), showError, Toast.LENGTH_LONG).show(); // kodingan ini jika ingin menampilkan kesalahan dari email atau password
+                            Toast.makeText(getApplicationContext(), "Email or Password is incorrect", Toast.LENGTH_LONG).show();
+                        } catch (Exception e) {
+                            Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
                         }
-                        Toast.makeText(getApplicationContext(), showError, Toast.LENGTH_LONG).show();
-                    } catch (Exception e) {
-                        Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
                     }
-
-//                Log.e(TAG, "onResponse:  pesanError = " + response.body().getPesanError().getError());
-//                    Toast.makeText(LoginActivity.this, "Login unsuccessful!!!", Toast.LENGTH_SHORT).show();
-//                    Toast.makeText(LoginActivity.this, "Login unsuccessful!!!", Toast.LENGTH_SHORT).show();
                 }
-            }
 
-            @Override
-            public void onFailure(Call<LoginResponse> call, Throwable t) {
-                Log.e(TAG, "masuk sini juga");
-                Log.e(TAG, "onFailure: " + t.getMessage());
-                Toast.makeText(LoginActivity.this, "No Internet Connection / Server Error", Toast.LENGTH_SHORT).show();
-            }
-        });
+                @Override
+                public void onFailure(Call<LoginResponse> call, Throwable t) {
+                    Log.e(TAG, "masuk sini juga");
+                    Log.e(TAG, "onFailure: " + t.getMessage());
+                    Toast.makeText(LoginActivity.this, "No Internet Connection / Server Error", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+
+    }
+
+    private boolean isValidate() {
+        Boolean isValid = true;
+        if (email.getText().toString().equals("")){
+            email.setError("Email is required");
+            isValid = false;
+        }
+        if(password.length()<6){
+            password.setError("Password must be at least 6 characters long");
+            isValid = false;
+        }
+        return isValid;
     }
 
 }

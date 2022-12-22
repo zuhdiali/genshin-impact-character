@@ -1,3 +1,11 @@
+/*
+ * *
+ *  * Created by zuhdi on 12/22/22, 8:35 AM
+ *  * Copyright (c) 2022 . All rights reserved.
+ *  * Last modified 12/16/22, 8:40 AM
+ *
+ */
+
 package com.example.karaktergenshinimpact.response;
 
 import com.google.gson.annotations.SerializedName;
