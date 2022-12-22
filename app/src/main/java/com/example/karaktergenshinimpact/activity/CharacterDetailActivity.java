@@ -66,7 +66,7 @@ public class CharacterDetailActivity extends AppCompatActivity {
         Intent intent = getIntent();
         Bundle extras = intent.getExtras();
         new DownloadImageTask(avatarImg).execute(AppUtils.urlAvatarImg + extras.getString("AVATAR_IMG"));
-//        new DownloadImageTask(cardImg).execute(AppUtils.urlCardImg+ extras.getString("CARD_IMG"));
+
         getSupportActionBar().setTitle(extras.getString("NAMA"));
 
         nama.setText(extras.getString("NAMA"));

@@ -106,7 +106,37 @@ public class EditProfileActivity extends AppCompatActivity {
     }
 
     private boolean isValidate() {
-        return true;
+        Boolean isValid = true;
+        if (email.getText().toString().equals("")) {
+            email.setError("Email is empty");
+            isValid = false;
+        }
+        if (username.getText().toString().equals("")) {
+            username.setError("Username is empty");
+            isValid = false;
+        }
+        if (namaLengkap.getText().toString().equals("")) {
+            namaLengkap.setError("Full name is empty");
+            isValid = false;
+        }
+        if (oldPassword.length() < 6) {
+            oldPassword.setError("Old password must be at least 6 characters long");
+            isValid = false;
+        }
+
+        if (newPassword.length() < 6) {
+            newPassword.setError("New password must be at least 6 characters long");
+            isValid = false;
+        }
+        if (confPassword.length() < 6) {
+            confPassword.setError("Confirm password must be at least 6 characters long");
+            isValid = false;
+        }
+        if (!newPassword.getText().toString().equals(confPassword.getText().toString())) {
+            confPassword.setError("Confirm password does not match with New Password");
+            isValid = false;
+        }
+        return isValid;
     }
 
     private boolean notChangePassword(){

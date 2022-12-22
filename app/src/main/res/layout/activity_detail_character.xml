@@ -58,9 +58,11 @@
 
                             <ImageView
                                 android:id="@+id/avatar_karakter"
+                                android:background="@drawable/background_border"
                                 android:layout_width="150dp"
                                 android:layout_height="150dp"
-                                android:layout_margin="10dp" />
+                                android:layout_margin="10dp"
+                                android:padding="1dp"/>
 
                             <LinearLayout
                                 android:layout_width="match_parent"

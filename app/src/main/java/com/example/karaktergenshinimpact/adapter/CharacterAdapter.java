@@ -102,10 +102,8 @@ public class CharacterAdapter extends RecyclerView.Adapter<CharacterAdapter.Hold
                 holder.visionKarakter.setImageResource(R.drawable.electro_vision);
                 break;
             default:
-//                holder.itemView.setBackgroundResource(R.drawable.background_hydro);
                 break;
         }
-
     }
 
     @Override

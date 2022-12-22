@@ -103,6 +103,7 @@ public class MainActivity extends AppCompatActivity {
                 }
                 characterAdapter = new CharacterAdapter(MainActivity.this, listKarakter);
                 recyclerView.setAdapter(characterAdapter);
+                Toast.makeText(MainActivity.this,"Refresh successfully!!",Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -110,6 +111,7 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(MainActivity.this,"Server Error / No Internet Connection",Toast.LENGTH_SHORT).show();
             }
         });
+
     }
 
     @Override
